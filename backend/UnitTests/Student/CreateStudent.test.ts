@@ -25,13 +25,13 @@ describe('Create Student Use Case', () => {
     });
 
     it('should create a student successfully', async () => {
-
         const studentDto: CreateStudentDTO = {
             name: 'John Doe',
             email: 'john.doe@example.com',
             ra: '14578',
             cpf: '123.456.789-10'
-        }
+        };
+
         const student = await createStudentUseCase.execute(studentDto);
 
         expect(student).toBeInstanceOf(Student);
@@ -40,28 +40,32 @@ describe('Create Student Use Case', () => {
         expect(student.ra).toBe('14578');
     });
 
-
     it('should throw an error when required fields are missing', async () => {
         const studentDto: CreateStudentDTO = {
             name: 'John Doe',
             email: '@example.com',
             ra: '',
             cpf: '123.456.789-10'
-        }
-        await expect(createStudentUseCase.execute(studentDto)).rejects.toThrow(AppError);
+        };
+
+        await expect(createStudentUseCase.execute(studentDto))
+            .rejects.toThrow(new AppError('VALIDATION_ERROR'));
     });
 
     it('should throw an error if email already exists', async () => {
         jest.spyOn(studentRepository, 'findByEmail').mockResolvedValue(
             new Student('Existing User', 'test@example.com', '67890', '987.654.321-00')
         );
+
         const studentDto: CreateStudentDTO = {
             name: 'John Doe',
             email: 'test@example.com',
             ra: '12345',
             cpf: '123.456.789-10'
-        }
-        await expect(createStudentUseCase.execute(studentDto)).rejects.toThrow(AppError);
+        };
+
+        await expect(createStudentUseCase.execute(studentDto))
+            .rejects.toThrow(new AppError('EMAIL_ALREADY_EXISTS'));
     });
 
     it('should throw an error if RA already exists', async () => {
@@ -74,7 +78,9 @@ describe('Create Student Use Case', () => {
             email: 'test@example.com',
             ra: '12345',
             cpf: '123.456.789-10'
-        }
-        await expect(createStudentUseCase.execute(studentDto)).rejects.toThrow(AppError);
+        };
+
+        await expect(createStudentUseCase.execute(studentDto))
+            .rejects.toThrow(new AppError('RA_ALREADY_EXISTS'));
     });
 });
