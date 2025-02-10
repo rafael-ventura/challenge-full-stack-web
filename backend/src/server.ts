@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import sequelize from './Infrastructure/database';
+import routes from './Api/routes/routes';
 
 dotenv.config();
 
@@ -18,9 +19,8 @@ app.use(express.urlencoded({extended: true}));
     }
 })();
 
-app.get('/', (req, res) => {
-    res.send('API is running!');
-});
+// Usa o arquivo central de rotas
+app.use('/api/v1', routes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
