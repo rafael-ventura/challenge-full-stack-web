@@ -10,7 +10,6 @@ export class StudentRepository {
             cpf: student.cpf,
         });
 
-        // 🔥 Retornando a entidade `Student` sem alterar a model
         return new Student(
             createdStudent.getDataValue('name'),
             createdStudent.getDataValue('email'),
@@ -22,10 +21,9 @@ export class StudentRepository {
     async findByEmail(email: string): Promise<Student | null> {
         const studentModel = await StudentModel.findOne({ where: { email } });
 
-        // 🔥 Se não encontrou, retorna `null`
+
         if (!studentModel) return null;
 
-        // 🔥 Retornando a entidade `Student`
         return new Student(
             studentModel.getDataValue('name'),
             studentModel.getDataValue('email'),

@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import sequelize, { syncDatabase } from './Infrastructure/database';
+import sequelize, {syncDatabase} from './Infrastructure/database';
 import routes from './Api/routes/routes';
-import { errorHandler } from './Api/middlewares/errorHandler';
+import {errorHandler} from './Api/middlewares/errorHandler';
 
 dotenv.config();
 
