@@ -1,9 +1,15 @@
-import { Router } from 'express';
+import {Router} from 'express';
+import {StudentController} from '../controllers/StudentController';
+import {CreateStudent} from '../../UseCases/Student/CreateStudent';
+import {StudentRepository} from '../../Infrastructure/repositories/StudentRepository';
 
-const studentRouter = Router();
+const router = Router();
 
-studentRouter.get('/', (req, res) => {
-    res.status(200).json({ message: 'Students API is running!' });
-});
+const studentRepository = new StudentRepository();
+const createStudentUseCase = new CreateStudent(studentRepository);
+const studentController = new StudentController(createStudentUseCase);
 
-export default studentRouter;
+//@ts-ignore
+router.post('/', (req, res, next) => studentController.create(req, res, next));
+
+export default router;

@@ -9,7 +9,10 @@
     "start": "node dist/server.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:rollback": "sequelize-cli db:migrate:undo",
+    "db:generate": "sequelize-cli model:generate --name Student --attributes name:string,email:string,ra:string,cpf:string"
   },
   "keywords": [],
   "author": "",

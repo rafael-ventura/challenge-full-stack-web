@@ -10,8 +10,18 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST!,
         dialect: 'postgres',
-        logging: false, // Evita logs excessivos
+        logging: false,
     }
 );
+
+// 🟢 Cria a tabela automaticamente se ela não existir
+export const syncDatabase = async () => {
+    try {
+        await sequelize.sync({ force: false }); // Não apaga os dados existentes
+        console.log('Database synchronized successfully.');
+    } catch (error) {
+        console.error('Database synchronization failed:', error);
+    }
+};
 
 export default sequelize;
