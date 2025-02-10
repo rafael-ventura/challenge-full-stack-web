@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import {Sequelize} from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,10 +14,9 @@ const sequelize = new Sequelize(
     }
 );
 
-// 🟢 Cria a tabela automaticamente se ela não existir
 export const syncDatabase = async () => {
     try {
-        await sequelize.sync({ force: false }); // Não apaga os dados existentes
+        await sequelize.sync({force: false});
         console.log('Database synchronized successfully.');
     } catch (error) {
         console.error('Database synchronization failed:', error);

@@ -55,4 +55,32 @@ export class StudentRepository {
             studentModel.getDataValue('cpf')
         ));
     }
+
+    async findById(id: number): Promise<Student | null> {
+        const studentModel = await StudentModel.findByPk(id);
+
+        if (!studentModel) return null;
+
+        return new Student(
+            studentModel.getDataValue('name'),
+            studentModel.getDataValue('email'),
+            studentModel.getDataValue('ra'),
+            studentModel.getDataValue('cpf')
+        );
+    }
+
+    async update(id: number, student: Student): Promise<Student> {
+        const [updated] = await StudentModel.update(
+            {name: student.name, email: student.email},
+            {where: {id}, returning: true}
+        );
+
+        if (!updated) throw new Error("Failed to update student");
+
+        const updatedStudent = await this.findById(id);
+        if (!updatedStudent) throw new Error("Failed to retrieve updated student");
+
+        return updatedStudent;
+    }
+
 }

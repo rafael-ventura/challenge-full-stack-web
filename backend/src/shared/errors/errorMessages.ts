@@ -18,5 +18,15 @@ export const ERROR_MESSAGES = {
         message: 'Internal Server Error',
         internalCode: 'INTERNAL_SERVER_ERROR',
         statusCode: 500,
+    },
+    STUDENT_NOT_FOUND: {
+        message: 'Student not found',
+        internalCode: 'STUDENT_NOT_FOUND',
+        statusCode: 404,
+    },
+    CANNOT_UPDATE_RA_OR_CPF: {
+        message: 'RA and CPF cannot be updated',
+        internalCode: 'CANNOT_UPDATE_RA_OR_CPF',
+        statusCode: 400,
     }
 };
