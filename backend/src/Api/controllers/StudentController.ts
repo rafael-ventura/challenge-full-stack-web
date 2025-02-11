@@ -1,54 +1,60 @@
-import {NextFunction, Request, Response} from 'express';
+import {NextFunction, Request, Response} from "express";
 import {CreateStudent} from "../../UseCases/Student/CreateStudent";
 import {ListStudents} from "../../UseCases/Student/ListStudents";
 import {UpdateStudent} from "../../UseCases/Student/UpdateStudent";
+import {DeleteStudent} from "../../UseCases/Student/DeleteStudent";
 import {CreateStudentDTO} from "../DTOs/CreateStudentDTO";
 import {StudentResponseDTO} from "../DTOs/CreateStudentResponseDTO";
 import {UpdateStudentDTO} from "../DTOs/UpdateStudentDTO";
 
-export class StudentController {
-    private createStudentUseCase: CreateStudent;
-    private listStudentsUseCase: ListStudents;
-    private updateStudentUseCase: UpdateStudent;
+export function StudentController(
+    createStudentUseCase: CreateStudent,
+    listStudentsUseCase: ListStudents,
+    updateStudentUseCase: UpdateStudent,
+    deleteStudentUseCase: DeleteStudent
+) {
+    return {
+        create: async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const studentData: CreateStudentDTO = req.body;
+                const student = await createStudentUseCase.execute(studentData);
+                return res.status(201).json(new StudentResponseDTO(student));
+            } catch (error) {
+                next(error);
+            }
+        },
 
-    constructor(createStudentUseCase: CreateStudent, listStudentsUseCase: ListStudents, updateStudentUseCase: UpdateStudent) {
-        this.listStudentsUseCase = listStudentsUseCase;
-        this.createStudentUseCase = createStudentUseCase;
-        this.updateStudentUseCase = updateStudentUseCase;
+        getAll: async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const students = await listStudentsUseCase.execute();
+                return res.status(200).json(students);
+            } catch (error) {
+                next(error);
+            }
+        },
 
-        this.create = this.create.bind(this);
-        this.getAll = this.getAll.bind(this);
-        this.update = this.update.bind(this);
-    }
+        update: async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const studentId = parseInt(req.params.id);
+                const studentData: UpdateStudentDTO = req.body;
+                const updatedStudent = await updateStudentUseCase.execute(
+                    studentId,
+                    studentData
+                );
+                return res.status(200).json(new StudentResponseDTO(updatedStudent));
+            } catch (error) {
+                next(error);
+            }
+        },
 
-    async create(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-        try {
-            const studentData: CreateStudentDTO = req.body;
-            const student = await this.createStudentUseCase.execute(studentData);
-            return res.status(201).json(new StudentResponseDTO(student));
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async getAll(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-        try {
-            const students = await this.listStudentsUseCase.execute();
-            return res.status(200).json(students);
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async update(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-        try {
-            const studentId = parseInt(req.params.id);
-            const studentData: UpdateStudentDTO = req.body;
-
-            const updatedStudent = await this.updateStudentUseCase.execute(studentId, studentData);
-            return res.status(200).json(new StudentResponseDTO(updatedStudent));
-        } catch (error) {
-            next(error);
-        }
-    }
+        delete: async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const studentId = parseInt(req.params.id);
+                await deleteStudentUseCase.execute(studentId);
+                return res.status(204).send();
+            } catch (error) {
+                next(error);
+            }
+        },
+    };
 }

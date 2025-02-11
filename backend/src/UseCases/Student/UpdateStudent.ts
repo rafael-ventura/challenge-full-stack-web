@@ -11,14 +11,20 @@ export class UpdateStudent {
     }
 
     async execute(id: number, data: UpdateStudentDTO): Promise<Student> {
-        const student = await this.studentRepository.findById(id);
-        if (!student) {
+        const studentExists = await this.studentRepository.findById(id);
+        if (!studentExists) {
             throw new AppError("STUDENT_NOT_FOUND");
         }
 
-        if (data.name) student.name = data.name;
-        if (data.email) student.email = data.email;
+        const updatedStudent = await this.studentRepository.update(id, {
+            name: data.name ?? studentExists.name,
+            email: data.email ?? studentExists.email
+        });
 
-        return await this.studentRepository.update(id, student);
+        if (!updatedStudent) {
+            throw new AppError("FAILED_TO_UPDATE_STUDENT");
+        }
+
+        return updatedStudent;
     }
 }

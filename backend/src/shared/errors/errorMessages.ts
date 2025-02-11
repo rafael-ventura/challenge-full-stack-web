@@ -28,5 +28,10 @@ export const ERROR_MESSAGES = {
         message: 'RA and CPF cannot be updated',
         internalCode: 'CANNOT_UPDATE_RA_OR_CPF',
         statusCode: 400,
+    },
+    FAILED_TO_UPDATE_STUDENT: {
+        message: 'Failed to update student',
+        internalCode: 'FAILED_TO_UPDATE_STUDENT',
+        statusCode: 500,
     }
 };

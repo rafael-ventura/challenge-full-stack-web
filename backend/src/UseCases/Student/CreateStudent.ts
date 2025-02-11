@@ -15,16 +15,16 @@ export class CreateStudent {
             throw new AppError('VALIDATION_ERROR');
         }
 
-        if (await this.studentRepository.findByEmail(data.email)) {
+        const emailExists = await this.studentRepository.findByEmail(data.email);
+        if (emailExists) {
             throw new AppError('EMAIL_ALREADY_EXISTS');
         }
 
-        if (await this.studentRepository.findByRA(data.ra)) {
+        const raExists = await this.studentRepository.findByRA(data.ra);
+        if (raExists) {
             throw new AppError('RA_ALREADY_EXISTS');
         }
 
-        const student = new Student(data.name, data.email, data.ra, data.cpf);
-        await this.studentRepository.create(student);
-        return student;
+        return await this.studentRepository.create(new Student(data.name, data.email, data.ra, data.cpf));
     }
 }
