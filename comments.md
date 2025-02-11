@@ -1,44 +1,61 @@
-# Diário de Desenvolvimento - 10/02/2025
-- Decisao da Arquitetura
-- Decisao da Stack do Backend
-- Modelagem do Banco de Dados
+## Diário de Desenvolvimento 
+### Configuração do Backend - 10/02/2025
+Hoje finalizei a estruturação do backend do projeto, desde a arquitetura até a implementação dos primeiros endpoints e testes unitários. O objetivo principal foi garantir uma base sólida, organizada e modular para facilitar futuras evoluções.
 
-## Decisão de Arquitetura
+Definição da Arquitetura e Stack
+Decidi seguir a Clean Architecture para separar as responsabilidades do código e manter uma estrutura mais organizada. Isso facilita a manutenção e os testes. Apesar de adicionar um pouco mais de complexidade inicial, a organização e escalabilidade do projeto compensam.
 
-Para o backend, foi decidido seguir a **Clean Architecture**. Essa escolha foi feita por priorizar a separação clara das responsabilidades em camadas, o que ajuda a manter o código mais organizado e fácil de escalar. Reconheço que esse padrão pode trazer uma leve complexidade adicional no início, mas acredito que o ganho em legibilidade e facilidade de manutenção compensa qualquer desafio inicial.
+#### A stack escolhida para o backend inclui:
 
-Segue o diagrama representando o fluxo da arquitetura do backend:
+- Node.js + TypeScript;
+- Express.js;
+- Sequelize;
+- PostgreSQL;
+- Jest;
+
+#### Modelagem e Configuração do Banco de Dados
+
+O banco de dados foi modelado com a tabela principal:
+
+**Students**: Guarda os dados dos alunos.
+
+![Modelagem do Banco de Dados](mockups/img_1.png)
+
+Usei o Sequelize como ORM para mapear a tabela e gerenciar as operações no banco.
+
+#### Estrutura do Backend
+
+A aplicação foi organizada seguindo os princípios da Clean Architecture:
 
 ![Arquitetura do Fluxo](mockups/img.png)
 
-### Por que Clean Architecture?
-1. Separação de responsabilidades, reduzindo o impacto de mudanças.
-2. Melhor organização, facilitando a manutenção e a extensão do sistema.
-3. Maior facilidade para testes unitários e de integração.
-4. Possível escalabilidade da aplicação.
+**API**: Camada de comunicação com o cliente, contendo os controladores e os endpoints.
 
-## Decisão da Stack do Backend
+**Use Cases**: Contêm as regras de negócio da aplicação, como criação, listagem, atualização e remoção de alunos.
 
-Depois de analisar os requisitos do projeto e considerando as tecnologias que tenho mais experiência e interesse em trabalhar, escolhi a seguinte stack para o backend:
+**Infrastructure**: Camada de infraestrutura, responsável por lidar com detalhes técnicos, como o banco de dados.
 
-- **Node.js, TypeScript, ,Sequelize, PostgreSQL, Jest**
+Criei os endpoints básicos para gerenciar alunos:
 
-## Modelagem do Banco de Dados
+1. POST /students → Criação de um novo aluno.
+2. GET /students → Listagem de alunos.
+3. PUT /students/:id → Atualização dos dados de um aluno.
+4. DELETE /students/:id → Remoção de um aluno.
 
-Outro passo importante foi criar a modelagem inicial do banco de dados. 
-Para isso, usei o **DBDiagram.io** para representar visualmente as tabelas e seus relacionamentos. 
-A estrutura inicial conta com duas tabelas principais:
+#### Middlewares e Tratamento de Erros
+Implementei um middleware de erro para capturar exceções e retornar mensagens padronizadas. 
+Além disso, configurei um middleware para lidar com funções assíncronas de forma centralizada, evitando a necessidade de try/catch repetidos nos controladores.
 
-- **students:** Para armazenar os dados dos alunos.
-- **enrollments:** Para controlar as matrículas dos alunos em diferentes cursos.
+#### Testes Unitários
 
-Aqui está o diagrama do banco:
+Para garantir a qualidade do código, escrevi testes unitários cobrindo os casos de uso do sistema:
 
-![Modelagem do Banco de Dados](mockups/img_1.png)
-### Decisões importantes no banco de dados:
-1. **Campos imutáveis:** `ra` e `cpf` são únicos.
-2. **Rastreamento:** Campos como `created_at`, `updated_at` e `enrolled_at` para histórico.
-3. **Relacionamento 1:N:** Um aluno pode ter várias matrículas, mas cada matrícula pertence a apenas um aluno.
+**CreateStudent:** Testa a criação de um aluno, validando regras como e-mail e RA únicos.
 
+**ListStudents:** Garante que todos os alunos sejam retornados corretamente.
 
----
+**UpdateStudent:** Verifica a atualização dos dados do aluno, garantindo que informações imutáveis não sejam alteradas.
+
+**DeleteStudent:** Testa a exclusão de um aluno e os erros caso ele não exista.
+
+_Os testes foram feitos com Jest e mocks do repositório para evitar dependência direta do banco._
