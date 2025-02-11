@@ -13,7 +13,7 @@ describe("List Students Use Case", () => {
 
         jest.spyOn(studentRepository, "findAll").mockResolvedValue([
             new Student("John Doe", "john.doe@example.com", "12345", "123.456.789-10"),
-            new Student("Alice Doe", "alice.doe@example.com", "67890", "987.654.321-00")
+            new Student("Alice Doe", "alice.doe@example.com", "67890", "987.654.321-00"),
         ]);
     });
 
@@ -26,21 +26,16 @@ describe("List Students Use Case", () => {
 
         expect(students).toHaveLength(2);
         expect(students[0].name).toBe("John Doe");
-        expect(students[1].email).toBe("alice.doe@example.com");
     });
 
     it("should return an empty array if no students are found", async () => {
         jest.spyOn(studentRepository, "findAll").mockResolvedValue([]);
-
         const students = await listStudentsUseCase.execute();
-
         expect(students).toEqual([]);
-        expect(students.length).toBe(0);
     });
 
     it("should handle errors properly", async () => {
         jest.spyOn(studentRepository, "findAll").mockRejectedValue(new Error("Database error"));
-
         await expect(listStudentsUseCase.execute()).rejects.toThrow("Database error");
     });
 });

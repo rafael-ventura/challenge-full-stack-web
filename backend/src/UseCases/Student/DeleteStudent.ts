@@ -9,9 +9,11 @@ export class DeleteStudent {
     }
 
     async execute(id: number): Promise<void> {
-        const deletedRows = await this.studentRepository.delete(id);
-        if (!deletedRows) {
+        const student = await this.studentRepository.findById(id);
+        if (!student) {
             throw new AppError("STUDENT_NOT_FOUND");
         }
+
+        await this.studentRepository.delete(id);
     }
 }
