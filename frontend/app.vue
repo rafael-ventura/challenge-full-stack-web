@@ -1,22 +1,20 @@
 <template>
   <v-app>
     <Sidebar />
-    <v-container fluid class="main-container">
-      <Header />
-      <NuxtPage />
-    </v-container>
+    <v-main class="main-container">
+      <v-container>
+        <NuxtPage />
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
 <script setup>
 import Sidebar from "@/components/Sidebar.vue";
-import Header from "@/components/Header.vue";
 </script>
 
 <style lang="scss">
 .main-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
 }
 </style>

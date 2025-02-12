@@ -1,6 +1,5 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
-
   css: ["vuetify/styles", "@mdi/font/css/materialdesignicons.css"],
 
   build: {
@@ -9,7 +8,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api/v1",
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:4200/api/v1",
     },
   },
+
+  compatibilityDate: "2025-02-11",
 });
