@@ -66,7 +66,7 @@ $grey-light: #f5f5f5;
 }
 
 .logo {
-  max-width: 120px;
+  max-width: 30%;
   margin: 0 auto 10%;
 }
 

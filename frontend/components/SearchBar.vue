@@ -1,27 +1,24 @@
 <template>
   <v-row align="center" class="search-bar">
-    <v-col cols="8">
+    <v-col cols="6">
       <v-text-field
           :model-value="searchQuery"
           @update:model-value="updateSearch"
           label="Digite sua busca"
           variant="outlined"
-          density="comfortable"
+          dense
           hide-details
           append-inner-icon="mdi-magnify"
-          class="search-input"
       />
     </v-col>
-    <v-col cols="4" class="d-flex justify-end">
-      <v-btn color="primary" class="search-btn" @click="emit('addStudent')">
-        Cadastrar Aluno
-      </v-btn>
+    <v-col cols="6" class="d-flex justify-end">
+      <v-btn color="primary" @click="emit('addStudent')">Cadastrar Aluno</v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script setup>
-import {defineEmits, defineProps} from "vue";
+import { defineProps, defineEmits } from "vue";
 
 defineProps({
   searchQuery: String,

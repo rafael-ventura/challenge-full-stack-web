@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <Sidebar :drawer="drawer" @update:drawer="drawer = $event" />
-    <v-main class="main-container">
+    <Sidebar v-model:drawer="drawer" />
+    <v-main :class="{ 'main-expanded': drawer }">
       <Header @toggleSidebar="toggleSidebar" />
       <v-container>
         <NuxtPage />
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Header from "@/components/Header.vue";
 
@@ -23,7 +23,7 @@ const toggleSidebar = () => {
 </script>
 
 <style lang="scss">
-.main-container {
+.main-expanded {
   transition: margin-left 0.3s ease-in-out;
 }
 </style>

@@ -1,6 +1,8 @@
+import { defineNuxtConfig } from 'nuxt/config';
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  css: ["vuetify/styles", "@mdi/font/css/materialdesignicons.css"],
+  css: ["vuetify/styles", "@mdi/font/css/materialdesignicons.css", "@/styles/app.scss"],
 
   build: {
     transpile: ["vuetify"],
