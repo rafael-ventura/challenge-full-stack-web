@@ -1,28 +1,8 @@
 <template>
   <v-container class="students-container">
     <v-card class="pa-4 mb-4" elevation="2">
-      <v-row align="center">
-        <v-col cols="6">
-          <v-card-title class="text-h6">Consulta de Alunos</v-card-title>
-        </v-col>
-        <v-col cols="6" class="d-flex justify-end">
-          <v-btn color="primary">Cadastrar Aluno</v-btn>
-        </v-col>
-      </v-row>
+      <SearchBar :searchQuery="search" @update:searchQuery="search = $event" @addStudent="openAddStudentModal"/>
     </v-card>
-
-    <v-row class="mb-4">
-      <v-col cols="6">
-        <v-text-field
-            v-model="search"
-            label="Digite sua busca"
-            variant="outlined"
-            dense
-            hide-details
-            append-inner-icon="mdi-magnify"
-        />
-      </v-col>
-    </v-row>
 
     <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
@@ -42,8 +22,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import { useStudentApi } from "@/composables/useStudentApi";
+import {computed, onMounted, ref} from "vue";
+import {useStudentApi} from "@/composables/useStudentApi";
+import SearchBar from "@/components/SearchBar.vue";
 
 const { fetchStudents, deleteStudent } = useStudentApi();
 const students = ref([]);
@@ -69,22 +50,12 @@ const filteredStudents = computed(() => {
 
 const loadStudents = async () => {
   loading.value = true;
-  try {
-    const result = await fetchStudents();
-    console.log("🔵 Dados recebidos da API:", result);
-
-    if (Array.isArray(result)) {
-      students.value = result;
-    } else if (result && result.data) {
-      students.value = result.data; // Caso a API retorne um objeto com { data: [...] }
-    } else {
-      students.value = [];
-    }
-  } catch (error) {
-    console.error("❌ Erro ao carregar alunos:", error);
-    students.value = [];
-  }
+  students.value = await fetchStudents();
   loading.value = false;
+};
+
+const openAddStudentModal = () => {
+  console.log("Abrir modal de cadastro de aluno");
 };
 
 const editStudent = (student) => {
