@@ -1,5 +1,14 @@
 <template>
   <v-app-bar color="white" elevation="1">
-    <v-app-bar-title>Módulo Acadêmico</v-app-bar-title>
+    <v-btn icon @click="emit('toggleSidebar')">
+      <v-icon>mdi-menu</v-icon>
+    </v-btn>
+    <v-app-bar-title>Gestão Matrículas A+ Educação</v-app-bar-title>
   </v-app-bar>
 </template>
+
+<script setup>
+import { defineEmits } from "vue";
+
+const emit = defineEmits(["toggleSidebar"]);
+</script>

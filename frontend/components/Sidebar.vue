@@ -1,5 +1,10 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app width="300">
+  <v-navigation-drawer
+      :model-value="drawer"
+      @update:model-value="emit('update:drawer', $event)"
+      app
+      width="300"
+  >
     <v-sheet class="pa-4 sidebar-header">
       <v-img
           src="https://maisaedu.com.br/hubfs/site-grupo-a/logo-mais-a-educacao.svg"
@@ -30,10 +35,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+defineProps({
+  drawer: Boolean,
+});
 
-const drawer = ref(true);
+const emit = defineEmits(["update:drawer"]);
 </script>
+
 
 <style scoped lang="scss">
 $red-primary: #c8102e;
@@ -74,6 +82,7 @@ $grey-light: #f5f5f5;
 
 .nav-item {
   color: #333;
+
   &:hover {
     background-color: rgba($red-light, 0.9);
     color: white;
