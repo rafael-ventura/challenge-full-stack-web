@@ -1,15 +1,19 @@
 <template>
   <v-container class="students-container">
     <v-card class="pa-4 mb-4" elevation="2">
-      <SearchBar :searchQuery="search" @update:searchQuery="search = $event" @addStudent="openAddStudentModal"/>
+      <SearchBar
+          :searchQuery="search"
+          @update:searchQuery="search = $event"
+          @addStudent="openAddStudentModal"
+      />
     </v-card>
 
     <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
     <v-data-table
-        v-if="!loading"
+        v-if="!loading && students.length > 0"
         :headers="headers"
-        :items="filteredStudents"
+        :items="students"
         class="elevation-1 custom-table"
         :items-per-page="itemsPerPage"
     >
@@ -18,6 +22,13 @@
         <v-btn icon="mdi-delete" variant="text" @click="deleteStudentAction(item.id)"></v-btn>
       </template>
     </v-data-table>
+
+
+    <div v-if="!loading && students.length === 0">
+      <p class="text-center">Nenhum aluno encontrado.</p>
+    </div>
+
+    <AddStudentModal v-model="isAddStudentModalOpen" @studentAdded="loadStudents"/>
   </v-container>
 </template>
 
@@ -25,12 +36,17 @@
 import {computed, onMounted, ref} from "vue";
 import {useStudentApi} from "@/composables/useStudentApi";
 import SearchBar from "@/components/SearchBar.vue";
+import AddStudentModal from "@/components/AddStudentModal.vue";
+import { useRouter } from "vue-router";
+
 
 const { fetchStudents, deleteStudent } = useStudentApi();
 const students = ref([]);
 const search = ref("");
 const itemsPerPage = ref(5);
 const loading = ref(false);
+const isAddStudentModalOpen = ref(false);
+const router = useRouter();
 
 const headers = [
   { title: "Registro Acadêmico", key: "ra" },
@@ -50,12 +66,26 @@ const filteredStudents = computed(() => {
 
 const loadStudents = async () => {
   loading.value = true;
-  students.value = await fetchStudents();
+  try {
+    const result = await fetchStudents();
+    console.log("🔵 Dados recebidos da API:", result);
+
+    if (Array.isArray(result)) {
+      students.value = result;
+    } else if (result && result.data) {
+      students.value = result.data;
+    } else {
+      students.value = [];
+    }
+  } catch (error) {
+    console.error("❌ Erro ao carregar alunos:", error);
+    students.value = [];
+  }
   loading.value = false;
 };
 
 const openAddStudentModal = () => {
-  console.log("Abrir modal de cadastro de aluno");
+  router.push("/students/register");
 };
 
 const editStudent = (student) => {
