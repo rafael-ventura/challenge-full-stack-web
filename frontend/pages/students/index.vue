@@ -4,14 +4,14 @@
       <SearchBar
           :searchQuery="search"
           @update:searchQuery="search = $event"
-          @addStudent="openAddStudentModal"
+          @addStudent="openAddStudentPage"
       />
     </v-card>
 
     <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
     <v-data-table
-        v-if="!loading && students.length > 0"
+        v-if="!loading"
         :headers="headers"
         :items="students"
         class="elevation-1 custom-table"
@@ -23,12 +23,10 @@
       </template>
     </v-data-table>
 
+    <v-alert v-if="!loading && students.length === 0" type="info" class="mt-4">
+      Nenhum aluno encontrado.
+    </v-alert>
 
-    <div v-if="!loading && students.length === 0">
-      <p class="text-center">Nenhum aluno encontrado.</p>
-    </div>
-
-    <AddStudentModal v-model="isAddStudentModalOpen" @studentAdded="loadStudents"/>
   </v-container>
 </template>
 
@@ -36,8 +34,7 @@
 import {computed, onMounted, ref} from "vue";
 import {useStudentApi} from "@/composables/useStudentApi";
 import SearchBar from "@/components/SearchBar.vue";
-import AddStudentModal from "@/components/AddStudentModal.vue";
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
 
 
 const { fetchStudents, deleteStudent } = useStudentApi();
@@ -84,7 +81,7 @@ const loadStudents = async () => {
   loading.value = false;
 };
 
-const openAddStudentModal = () => {
+const openAddStudentPage = () => {
   router.push("/students/register");
 };
 
