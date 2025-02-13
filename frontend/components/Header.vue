@@ -3,7 +3,7 @@
     <v-btn icon @click="emit('toggleSidebar')">
       <v-icon>mdi-menu</v-icon>
     </v-btn>
-    <v-app-bar-title>Gestão Matrículas A+ Educação</v-app-bar-title>
+    <v-app-bar-title>A+ Educação</v-app-bar-title>
   </v-app-bar>
 </template>
 

@@ -13,7 +13,7 @@ export function useStudentApi() {
         }
     };
 
-    const createStudent = async (student: { name: string; email: string; ra: string; cpf: string }) => {
+    const createStudent = async (student: Student) => {
         try {
             const { data, error } = await useFetch(`${apiBaseUrl}/students`, {
                 method: "POST",
@@ -23,10 +23,11 @@ export function useStudentApi() {
             return data.value;
         } catch (err) {
             console.error("❌ Erro ao criar aluno:", err);
+            throw err;
         }
     };
 
-    const updateStudent = async (id: number, student: { name?: string; email?: string }) => {
+    const updateStudent = async (id: number, student: Partial<Student>) => {
         try {
             const { data, error } = await useFetch(`${apiBaseUrl}/students/${id}`, {
                 method: "PUT",
@@ -36,6 +37,7 @@ export function useStudentApi() {
             return data.value;
         } catch (err) {
             console.error("❌ Erro ao atualizar aluno:", err);
+            throw err;
         }
     };
 
@@ -47,6 +49,7 @@ export function useStudentApi() {
             if (error.value) throw new Error(error.value.message);
         } catch (err) {
             console.error("❌ Erro ao excluir aluno:", err);
+            throw err;
         }
     };
 
