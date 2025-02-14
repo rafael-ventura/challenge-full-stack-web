@@ -41,15 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import {useStudentApi} from "@/composables/useStudentApi";
-import {useRouter} from "vue-router";
-import {Student} from "@/models/Student";
+import { onMounted, ref } from "vue";
+import { useStudentApi } from "@/composables/useStudentApi";
+import { useRouter } from "vue-router";
+import { Student } from "@/models/Student";
 import SearchBar from "@/components/SearchBar.vue";
 import StudentsTable from "@/components/StudentsTable.vue";
 import EditStudentModal from "@/components/EditStudentModal.vue";
 
-const {fetchStudents, deleteStudent: deleteStudentApi} = useStudentApi();
+const { fetchStudents, deleteStudent: deleteStudentApi } = useStudentApi();
 const router = useRouter();
 
 const students = ref<Student[]>([]);
@@ -58,12 +58,13 @@ const itemsPerPage = ref(10);
 const loading = ref(false);
 const deleteDialog = ref(false);
 const editDialog = ref(false);
-const studentToDelete = ref<string | null>(null);
+const studentToDelete = ref<number | null>(null);
 const selectedStudent = ref<Student | null>(null);
 
 const headers = [
   { title: "Registro Acadêmico", key: "ra" },
   { title: "Nome", key: "name" },
+  { title: "Email", key: "email" },
   { title: "CPF", key: "cpf" },
   { title: "Ações", key: "actions", sortable: false },
 ];
@@ -91,16 +92,14 @@ const openEditStudentModal = (student: Student) => {
   editDialog.value = true;
 };
 
-const confirmDeleteStudent = (studentRa: string) => {
-  console.log("🟡 Preparando para excluir aluno com RA:", studentRa);
-  studentToDelete.value = studentRa;
+const confirmDeleteStudent = (studentId: number) => {
+  console.log("🟡 Preparando para excluir aluno com ID:", studentId);
+  studentToDelete.value = studentId;
   deleteDialog.value = true;
 };
 
 const deleteStudent = async () => {
   if (!studentToDelete.value) return;
-
-  console.log("🛑 Excluindo aluno com RA:", studentToDelete.value);
 
   try {
     await deleteStudentApi(studentToDelete.value);

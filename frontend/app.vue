@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Sidebar v-model:drawer="drawer" />
-    <v-main :class="{ 'main-expanded': drawer }">
+    <v-main :class="{ 'main-expanded': drawer, 'main-collapsed': !drawer }">
       <Header @toggleSidebar="toggleSidebar" />
       <v-container>
         <NuxtPage />
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Header from "@/components/Header.vue";
 
@@ -24,6 +24,11 @@ const toggleSidebar = () => {
 
 <style lang="scss">
 .main-expanded {
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.main-collapsed {
+  margin-left: 0;
   transition: margin-left 0.3s ease-in-out;
 }
 </style>

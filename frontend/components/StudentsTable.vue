@@ -5,7 +5,7 @@
       :items="students"
       class="elevation-1 custom-table"
       :items-per-page="itemsPerPage"
-      item-value="ra"
+      item-value="id"
   >
     <!-- Personalizando as colunas -->
     <template v-slot:item.ra="{ item }">
@@ -14,6 +14,10 @@
 
     <template v-slot:item.name="{ item }">
       {{ item.name || "Sem Nome" }}
+    </template>
+
+    <template v-slot:item.email="{ item }">
+      {{ item.email || "Sem Email" }}
     </template>
 
     <template v-slot:item.cpf="{ item }">
@@ -33,7 +37,7 @@
 import { defineProps, defineEmits } from "vue";
 import { Student } from "@/models/Student";
 
-const props = defineProps<{
+defineProps<{
   students: Student[];
   headers: { title: string; key: string; sortable?: boolean }[];
   loading: boolean;
@@ -43,21 +47,17 @@ const props = defineProps<{
 const emit = defineEmits(["editStudent", "deleteStudent"]);
 
 const editStudent = (student: Student) => {
-  if (!student?.ra) {
-    console.warn("⚠️ Nenhum RA encontrado para edição.");
-    return;
-  }
-  console.log("✏️ Editando aluno com RA:", student.ra);
+  console.log("✏️ Editando aluno com ID:", student.id);
   emit("editStudent", student);
 };
 
 const confirmDelete = (student: Student) => {
-  if (!student?.ra) {
-    console.warn("⚠️ Nenhum RA encontrado para exclusão.");
+  if (!student.id) {
+    console.warn("⚠️ Nenhum ID encontrado para exclusão.");
     return;
   }
-  console.log("🟡 Preparando para excluir aluno com RA:", student.ra);
-  emit("deleteStudent", student.ra);
+  console.log("🟡 Preparando para excluir aluno com ID:", student.id);
+  emit("deleteStudent", Number(student.id)); // ✅ Convertendo ID para número
 };
 </script>
 

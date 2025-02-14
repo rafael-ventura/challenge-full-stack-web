@@ -5,7 +5,9 @@
       @update:model-value="emit('update:drawer', $event)"
       app
       width="300"
+      permanent
   >
+
     <v-sheet class="pa-4 sidebar-header">
       <v-img
           src="https://maisaedu.com.br/hubfs/site-grupo-a/logo-mais-a-educacao.svg"
