@@ -4,9 +4,9 @@ export function useStudentApi() {
     const config = useRuntimeConfig();
     const apiBaseUrl = config.public.apiBaseUrl;
 
-    const fetchStudents = async () => {
+    const fetchStudents = async (): Promise<Student[]> => { // 🔥 Define o tipo de retorno como um array de Student
         try {
-            const response = await $fetch(`${apiBaseUrl}/students`, {method: "GET"});
+            const response = await $fetch<Student[]>(`${apiBaseUrl}/students`, {method: "GET"});
 
             console.log("📥 Resposta da API:", response);
             return response;
@@ -15,6 +15,7 @@ export function useStudentApi() {
             return [];
         }
     };
+
 
     const createStudent = async (student: Student) => {
         try {

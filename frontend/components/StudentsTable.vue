@@ -7,7 +7,6 @@
       :items-per-page="itemsPerPage"
       item-value="id"
   >
-    <!-- Personalizando as colunas -->
     <template v-slot:item.ra="{ item }">
       {{ item.ra || "N/A" }}
     </template>
@@ -34,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-import { Student } from "@/models/Student";
+import {defineEmits, defineProps} from "vue";
+import {Student} from "@/models/Student";
 
 defineProps<{
   students: Student[];
@@ -47,39 +46,20 @@ defineProps<{
 const emit = defineEmits(["editStudent", "deleteStudent"]);
 
 const editStudent = (student: Student) => {
-  console.log("✏️ Editando aluno com ID:", student.id);
   emit("editStudent", student);
 };
 
 const confirmDelete = (student: Student) => {
-  if (!student.id) {
-    console.warn("⚠️ Nenhum ID encontrado para exclusão.");
-    return;
-  }
-  console.log("🟡 Preparando para excluir aluno com ID:", student.id);
-  emit("deleteStudent", Number(student.id)); // ✅ Convertendo ID para número
+  if (!student.id) return;
+  emit("deleteStudent", Number(student.id));
 };
 </script>
 
-<style lang="scss" scoped>
-/* 🔴 Aplicando cor vermelha no header */
-$red-primary: #b71c1c; // Vermelho forte
-$red-dark: #9a0007; // Vermelho mais escuro para hover
-$white-text: #ffffff;
-$grey-light: #f5f5f5;
-
-::v-deep(.v-data-table-header th) {
-  background-color: $red-primary !important;
-  color: $white-text !important;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 12px;
-  font-size: 16px;
-  text-align: center;
-}
+<style lang="scss">
+@use "@/styles/app.scss" as app;
 
 .custom-table {
-  border: 2px solid #ddd;
+  border: 2px solid app.$grey-light;
   border-radius: 8px;
   overflow: hidden;
 
@@ -94,5 +74,15 @@ $grey-light: #f5f5f5;
     justify-content: center;
     gap: 10px;
   }
+
+  th {
+    font-weight: bold;
+    font-size: 16px;
+    color: app.$white-text;
+    background-color: app.$red-primary;
+
+  }
+
 }
+
 </style>

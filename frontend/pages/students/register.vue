@@ -11,7 +11,7 @@
       <v-card-text>
         <v-form ref="form" v-model="valid">
           <v-text-field label="Nome" v-model="student.name" :rules="[rules.required]" required/>
-          <v-text-field label="E-mail" v-model="student.email" type="email" required/>
+          <v-text-field label="E-mail" v-model="student.email" :rules="[rules.required, rules.email]" required/>
           <v-text-field
               label="RA (Registro Acadêmico)"
               v-model="student.ra"
@@ -44,42 +44,29 @@ import {useRoute, useRouter} from "vue-router";
 import {useStudentApi} from "@/composables/useStudentApi";
 import {Student} from "@/models/Student";
 import {getErrorMessage} from "@/utils/errorMessages";
+import {useNotification} from "@/composables/useNotification";
+import {validationRules} from "@/utils/validationRules"; // 🔥 Importando regras reutilizáveis
 
 const {fetchStudents, updateStudent, createStudent} = useStudentApi();
 const route = useRoute();
 const router = useRouter();
+const {snackbar, showNotification, closeNotification} = useNotification();
 
 const student = ref(new Student());
 const form = ref<any>(null);
 const valid = ref(false);
 const isEditMode = ref(false);
 
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-});
-
-const showNotification = (message: string, type: "success" | "error") => {
-  snackbar.value = {show: true, message, color: type};
-};
-
-const rules = {
-  required: (v: string) => !!v || "Este campo é obrigatório.",
-  numeric: (v: string) => /^\d+$/.test(v) || "Somente números são permitidos.",
-  cpf: (v: string) => /^\d{11}$/.test(v) || "CPF deve conter 11 números.",
-};
+const rules = validationRules; // 🔥 Usando regras importadas
 
 const saveStudent = async () => {
-  console.log('Enviando dados do aluno:', student.value);
-
-  if (!valid.value) return;
+  if (!form.value?.validate()) return; // 🔥 Força a validação antes de salvar
 
   try {
     if (isEditMode.value) {
       await updateStudent(student.value.id!, {
         name: student.value.name,
-        email: student.value.email
+        email: student.value.email,
       });
       showNotification("Aluno atualizado com sucesso!", "success");
     } else {
@@ -90,18 +77,16 @@ const saveStudent = async () => {
     student.value = new Student();
     form.value?.resetValidation();
   } catch (error: any) {
-    console.error("❌ Erro ao salvar aluno:", error);
     showNotification(getErrorMessage(error?.response?._data?.error, "Ocorreu um erro inesperado."), "error");
   }
 };
-
 
 const cancel = () => router.push("/students");
 
 onMounted(async () => {
   if (route.query.id) {
     isEditMode.value = true;
-    const result = await fetchStudents();
+    const result: Student[] = await fetchStudents();
     student.value = result.find((s: Student) => s.id === Number(route.query.id)) || new Student();
   }
 });

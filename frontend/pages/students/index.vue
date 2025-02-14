@@ -1,5 +1,6 @@
 <template>
   <v-container class="students-container">
+    <h1 class="mb-4">Consulta de Alunos</h1>
     <v-card class="pa-4 mb-4" elevation="2">
       <SearchBar
           :searchQuery="search"
@@ -41,10 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useStudentApi } from "@/composables/useStudentApi";
-import { useRouter } from "vue-router";
-import { Student } from "@/models/Student";
+import {onMounted, ref} from "vue";
+import {useStudentApi} from "@/composables/useStudentApi";
+import {useRouter} from "vue-router";
+import {Student} from "@/models/Student";
 import SearchBar from "@/components/SearchBar.vue";
 import StudentsTable from "@/components/StudentsTable.vue";
 import EditStudentModal from "@/components/EditStudentModal.vue";
