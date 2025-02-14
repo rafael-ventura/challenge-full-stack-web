@@ -2,17 +2,23 @@
   <v-container class="students-container">
     <h1 class="mb-4">Consulta de Alunos</h1>
     <v-card class="pa-4 mb-4" elevation="2">
-      <SearchBar
-          :searchQuery="search"
-          @update:searchQuery="search = $event"
-          @addStudent="openAddStudentPage"
-      />
+      <v-row align="center">
+        <v-col cols="9">
+          <SearchBar
+              :searchQuery="search"
+              @update:searchQuery="search = $event"
+          />
+        </v-col>
+        <v-col cols="3" class="d-flex justify-end">
+          <v-btn color="primary" @click="openAddStudentPage">Cadastrar Aluno</v-btn>
+        </v-col>
+      </v-row>
     </v-card>
 
     <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
     <StudentsTable
-        :students="students"
+        :students="filteredStudents"
         :headers="headers"
         :loading="loading"
         :itemsPerPage="itemsPerPage"
@@ -24,10 +30,8 @@
       Nenhum aluno encontrado.
     </v-alert>
 
-    <!-- Modal de Edição -->
     <EditStudentModal v-model="editDialog" :student="selectedStudent" @studentUpdated="loadStudents"/>
 
-    <!-- Modal de Confirmação de Exclusão -->
     <v-dialog v-model="deleteDialog" max-width="400px">
       <v-card>
         <v-card-title>Confirmação</v-card-title>
@@ -42,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useStudentApi} from "@/composables/useStudentApi";
 import {useRouter} from "vue-router";
 import {Student} from "@/models/Student";
@@ -70,11 +74,26 @@ const headers = [
   { title: "Ações", key: "actions", sortable: false },
 ];
 
+const filteredStudents = computed(() => {
+  if (!search.value) return students.value;
+
+  return students.value.filter(student => {
+    const name = student.name?.toLowerCase().trim() || "";
+    const email = student.email?.toLowerCase().trim() || "";
+    const query = search.value.toLowerCase().trim();
+    const cpf = student.cpf?.replace(/\D/g, "") || "";
+    const ra = student.ra?.toString() || "";
+
+    return name.includes(query) || email.includes(query) || cpf.includes(query) || ra.includes(query);
+  });
+});
+
+
 const loadStudents = async () => {
   loading.value = true;
   try {
     const result = await fetchStudents();
-    students.value = Array.isArray(result) ? result : result?.data || [];
+    students.value = Array.isArray(result) ? result : result?.data ?? [];
 
     console.log("📥 Alunos carregados:", students.value);
   } catch (error) {

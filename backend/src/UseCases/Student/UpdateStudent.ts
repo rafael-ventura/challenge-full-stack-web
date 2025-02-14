@@ -1,7 +1,7 @@
 import {StudentRepository} from "../../Infrastructure/repositories/StudentRepository";
 import {Student} from "../../Domain/entities/Student";
 import {AppError} from "../../shared/errors/AppError";
-import {UpdateStudentDTO} from "../../Api/DTOs/UpdateStudentDTO";
+import {StudentUpdateDTO} from "../../Api/DTOs/StudentUpdateDTO";
 
 export class UpdateStudent {
     private studentRepository: StudentRepository;
@@ -10,15 +10,12 @@ export class UpdateStudent {
         this.studentRepository = studentRepository;
     }
 
-    async execute(id: number, data: UpdateStudentDTO): Promise<Student> {
-        const studentExists = await this.studentRepository.findById(id);
-        if (!studentExists) {
-            throw new AppError("STUDENT_NOT_FOUND");
-        }
+    async execute(studentId: number, updateStudentReq: StudentUpdateDTO): Promise<Student> {
+        const existingStudent = await this.validateStudentUpdate(studentId, updateStudentReq);
 
-        const updatedStudent = await this.studentRepository.update(id, {
-            name: data.name ?? studentExists.name,
-            email: data.email ?? studentExists.email
+        const updatedStudent = await this.studentRepository.update(studentId, {
+            name: updateStudentReq.name ?? existingStudent.name,
+            email: updateStudentReq.email ?? existingStudent.email
         });
 
         if (!updatedStudent) {
@@ -26,5 +23,25 @@ export class UpdateStudent {
         }
 
         return updatedStudent;
+    }
+
+    private async validateStudentUpdate(studentId: number, updateStudentReq: StudentUpdateDTO): Promise<Student> {
+        if (!updateStudentReq.name || !updateStudentReq.email) {
+            throw new AppError('FIELD_REQUIRED');
+        }
+
+        const studentFromDb = await this.studentRepository.findById(studentId);
+        if (!studentFromDb) {
+            throw new AppError("STUDENT_NOT_FOUND");
+        }
+
+        if (updateStudentReq.email !== studentFromDb.email) {
+            const studentWithEmail = await this.studentRepository.findByEmail(updateStudentReq.email);
+            if (studentWithEmail) {
+                throw new AppError('EMAIL_ALREADY_EXISTS');
+            }
+        }
+
+        return studentFromDb;
     }
 }

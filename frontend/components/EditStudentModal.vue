@@ -21,11 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineProps, ref, watch} from "vue";
-import {useStudentApi} from "@/composables/useStudentApi";
-import {Student} from "@/models/Student";
-import {useNotification} from "@/composables/useNotification";
-import {validationRules} from "@/utils/validationRules"; // 🔥 Importando regras de validação
+
+import type {Student} from "~/models/Student";
 
 const {snackbar, showNotification, closeNotification} = useNotification();
 const { updateStudent } = useStudentApi();

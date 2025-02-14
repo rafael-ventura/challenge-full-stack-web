@@ -1,4 +1,4 @@
-export interface CreateStudentDTO {
+export interface StudentCreateDTO {
     name: string;
     email: string;
     ra: string;

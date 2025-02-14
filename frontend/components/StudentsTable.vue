@@ -20,7 +20,7 @@
     </template>
 
     <template v-slot:item.cpf="{ item }">
-      {{ item.cpf || "Sem CPF" }}
+      {{ formatCPF(item.cpf) || "Sem CPF" }}
     </template>
 
     <template v-slot:item.actions="{ item }">
@@ -32,9 +32,8 @@
   </v-data-table>
 </template>
 
-<script setup lang="ts">
-import {defineEmits, defineProps} from "vue";
-import {Student} from "@/models/Student";
+<script lang="ts" setup>
+import type {Student} from "~/models/Student";
 
 defineProps<{
   students: Student[];
@@ -65,14 +64,15 @@ const confirmDelete = (student: Student) => {
 
   td {
     padding: 10px;
-    text-align: center;
+    text-align: left;
     font-size: 14px;
   }
 
   .actions-column {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     gap: 10px;
+    margin-left: -6%;
   }
 
   th {
@@ -80,7 +80,7 @@ const confirmDelete = (student: Student) => {
     font-size: 16px;
     color: app.$white-text;
     background-color: app.$red-primary;
-
+    text-align: center;
   }
 
 }
