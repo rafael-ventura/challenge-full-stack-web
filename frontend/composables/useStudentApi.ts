@@ -4,11 +4,11 @@ export function useStudentApi() {
     const config = useRuntimeConfig();
     const apiBaseUrl = config.public.apiBaseUrl;
 
-    const fetchStudents = async (): Promise<Student[]> => { // 🔥 Define o tipo de retorno como um array de Student
+    const fetchStudents = async (): Promise<Student[]> => {
         try {
             const response = await $fetch<Student[]>(`${apiBaseUrl}/students`, {method: "GET"});
 
-            console.log("📥 Resposta da API:", response);
+            console.log("Resposta da API:", response);
             return response;
         } catch (err) {
             console.error("❌ Erro ao buscar alunos:", err);

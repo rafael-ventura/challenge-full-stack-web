@@ -31,6 +31,10 @@ export class UpdateStudent {
             throw new AppError('FIELD_REQUIRED');
         }
 
+        if (updateStudentReq.name.length < 2) {
+            throw new AppError('INVALID_NAME');
+        }
+
         if (!DataUtils.isValidEmail(updateStudentReq.email)) {
             throw new AppError('INVALID_EMAIL');
         }

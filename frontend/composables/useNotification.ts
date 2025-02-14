@@ -5,7 +5,7 @@ export function useNotification() {
         show: false,
         message: "",
         color: "success",
-        timeout: 4000,
+        timeout: 3000,
     });
 
     const showNotification = (message: string, type: "success" | "error" = "success", delay = 4000) => {

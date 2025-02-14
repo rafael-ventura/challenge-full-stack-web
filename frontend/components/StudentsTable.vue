@@ -44,8 +44,10 @@ defineProps<{
 
 const emit = defineEmits(["editStudent", "deleteStudent"]);
 
+const router = useRouter();
+
 const editStudent = (student: Student) => {
-  emit("editStudent", student);
+  router.push({path: "/students/edit/" + student.id});
 };
 
 const confirmDelete = (student: Student) => {

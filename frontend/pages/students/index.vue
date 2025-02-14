@@ -52,7 +52,6 @@ import {useRouter} from "vue-router";
 import {Student} from "@/models/Student";
 import SearchBar from "@/components/SearchBar.vue";
 import StudentsTable from "@/components/StudentsTable.vue";
-import EditStudentModal from "@/components/EditStudentModal.vue";
 
 const { fetchStudents, deleteStudent: deleteStudentApi } = useStudentApi();
 const router = useRouter();
