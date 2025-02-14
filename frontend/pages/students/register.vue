@@ -6,7 +6,7 @@
 
     <v-card class="form-card">
       <v-card-title class="form-title">
-        {{ isEditMode ? "Editar Aluno" : "Cadastro de Aluno" }}
+        <h2> Cadastro de Aluno</h2>
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid">
@@ -24,14 +24,15 @@
               v-model="student.cpf"
               :rules="[rules.required, rules.cpf]"
               required
-              @input="student.cpf = student.cpf.replace(/\D/g, '')"
+              maxlength="14"
+              @input="student.cpf = formatCPF(student.cpf)"
           />
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-space-between">
         <v-btn color="grey" variant="outlined" @click="cancel">Cancelar</v-btn>
         <v-btn color="primary" variant="outlined" :disabled="!valid" class="btn-save" @click="saveStudent">
-          {{ isEditMode ? "Salvar Alterações" : "Salvar" }}
+          Salvar
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -39,13 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {useStudentApi} from "@/composables/useStudentApi";
-import {Student} from "@/models/Student";
-import {getErrorMessage} from "@/utils/errorMessages";
-import {useNotification} from "@/composables/useNotification";
-import {validationRules} from "@/utils/validationRules"; // 🔥 Importando regras reutilizáveis
+import {Student} from "~/models/Student";
 
 const {fetchStudents, updateStudent, createStudent} = useStudentApi();
 const route = useRoute();
@@ -55,25 +50,17 @@ const {snackbar, showNotification, closeNotification} = useNotification();
 const student = ref(new Student());
 const form = ref<any>(null);
 const valid = ref(false);
-const isEditMode = ref(false);
 
-const rules = validationRules; // 🔥 Usando regras importadas
+const rules = validationRules;
 
 const saveStudent = async () => {
-  if (!form.value?.validate()) return; // 🔥 Força a validação antes de salvar
+  if (!form.value?.validate()) return;
+
+  const studentData = {...student.value, cpf: student.value.cpf.replace(/\D/g, "")};
 
   try {
-    if (isEditMode.value) {
-      await updateStudent(student.value.id!, {
-        name: student.value.name,
-        email: student.value.email,
-      });
-      showNotification("Aluno atualizado com sucesso!", "success");
-    } else {
-      await createStudent(student.value);
-      showNotification("Aluno cadastrado com sucesso!", "success");
-    }
-
+    await createStudent(studentData);
+    showNotification("Aluno cadastrado com sucesso!", "success");
     student.value = new Student();
     form.value?.resetValidation();
   } catch (error: any) {
@@ -81,11 +68,11 @@ const saveStudent = async () => {
   }
 };
 
+
 const cancel = () => router.push("/students");
 
 onMounted(async () => {
   if (route.query.id) {
-    isEditMode.value = true;
     const result: Student[] = await fetchStudents();
     student.value = result.find((s: Student) => s.id === Number(route.query.id)) || new Student();
   }
@@ -115,7 +102,7 @@ onMounted(async () => {
   background-color: #c8102e !important;
   color: white !important;
   font-weight: bold;
-  padding: 12px 24px;
+  padding: 0 24px;
   transition: background 0.3s;
 
   &:hover {

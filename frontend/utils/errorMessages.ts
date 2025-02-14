@@ -1,8 +1,7 @@
 export const errorMessages: Record<string, string> = {
-    "VALIDATION_ERROR": "Preencha todos os campos obrigatórios.",
-    "EMAIL_ALREADY_EXISTS": "Este e-mail já está cadastrado.",
-    "INVALID_CPF": "O CPF informado não é válido.",
-    "INVALID_RA": "O RA informado não é válido."
+    "All fields are required": "Preencha todos os campos obrigatórios.",
+    "Email already exists": "Este e-mail já está cadastrado.",
+    "RA already exists": "Este RA já está cadastrado.",
 };
 
 export const getErrorMessage = (internalCode: string, defaultMessage: string): string => {

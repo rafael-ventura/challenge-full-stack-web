@@ -3,9 +3,9 @@ import {CreateStudent} from "../../UseCases/Student/CreateStudent";
 import {ListStudents} from "../../UseCases/Student/ListStudents";
 import {UpdateStudent} from "../../UseCases/Student/UpdateStudent";
 import {DeleteStudent} from "../../UseCases/Student/DeleteStudent";
-import {CreateStudentDTO} from "../DTOs/CreateStudentDTO";
-import {StudentResponseDTO} from "../DTOs/StudentResponseDTO";
-import {UpdateStudentDTO} from "../DTOs/UpdateStudentDTO";
+import {StudentCreateDTO} from "../DTOs/StudentCreateDTO";
+import {StudentCreateResponseDTO} from "../DTOs/StudentCreateResponseDTO";
+import {StudentUpdateDTO} from "../DTOs/StudentUpdateDTO";
 
 export function StudentController(
     createStudentUseCase: CreateStudent,
@@ -16,10 +16,10 @@ export function StudentController(
     return {
         create: async (req: Request, res: Response, next: NextFunction) => {
             try {
-                const studentData: CreateStudentDTO = req.body;
+                const studentData: StudentCreateDTO = req.body;
                 const student = await createStudentUseCase.execute(studentData);
 
-                return res.status(201).json(new StudentResponseDTO(student));
+                return res.status(201).json(new StudentCreateResponseDTO(student));
             } catch (error) {
                 next(error);
             }
@@ -38,12 +38,12 @@ export function StudentController(
         update: async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const studentId = parseInt(req.params.id);
-                const studentData: UpdateStudentDTO = req.body;
+                const studentData: StudentUpdateDTO = req.body;
                 const updatedStudent = await updateStudentUseCase.execute(
                     studentId,
                     studentData
                 );
-                return res.status(200).json(new StudentResponseDTO(updatedStudent));
+                return res.status(200).json(new StudentCreateResponseDTO(updatedStudent));
             } catch (error) {
                 next(error);
             }

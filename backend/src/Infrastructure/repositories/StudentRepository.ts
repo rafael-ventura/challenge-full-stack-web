@@ -5,7 +5,7 @@ export class StudentRepository {
     private mapToEntity(model: StudentModel | null): Student | null {
         if (!model) return null;
         const data = model.toJSON();
-        return new Student(data.id, data.name, data.email, data.ra, data.cpf); // ✅ Retornando ID
+        return new Student(data.id, data.name, data.email, data.ra, data.cpf);
     }
 
     async create(student: Student): Promise<Student> {
@@ -27,6 +27,11 @@ export class StudentRepository {
 
     async findByRA(ra: string): Promise<Student | null> {
         const studentModel = await StudentModel.findOne({ where: { ra } });
+        return this.mapToEntity(studentModel);
+    }
+
+    async findByCPF(cpf: string): Promise<Student | null> {
+        const studentModel = await StudentModel.findOne({where: {cpf}});
         return this.mapToEntity(studentModel);
     }
 

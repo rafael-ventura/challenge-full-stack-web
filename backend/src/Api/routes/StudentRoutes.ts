@@ -23,9 +23,9 @@ const studentController = StudentController(
     deleteStudentUseCase
 );
 
-router.post("/", asyncHandler(studentController.create));
+router.post("", asyncHandler(studentController.create));
 router.put("/:id", asyncHandler(studentController.update));
-router.get("/", asyncHandler(studentController.getAll));
+router.get("", asyncHandler(studentController.getAll));
 router.delete("/:id", asyncHandler(studentController.delete));
 
 export default router;

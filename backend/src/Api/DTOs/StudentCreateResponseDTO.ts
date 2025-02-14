@@ -1,6 +1,6 @@
 import { Student } from "../../Domain/entities/Student";
 
-export class StudentResponseDTO {
+export class StudentCreateResponseDTO {
     id: number;
     name: string;
     email: string;

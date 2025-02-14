@@ -1,5 +1,5 @@
 import {StudentRepository} from '../../Infrastructure/repositories/StudentRepository';
-import {StudentResponseDTO} from '../../Api/DTOs/StudentResponseDTO';
+import {StudentCreateResponseDTO} from '../../Api/DTOs/StudentCreateResponseDTO';
 
 export class ListStudents {
     private studentRepository: StudentRepository;
@@ -8,8 +8,8 @@ export class ListStudents {
         this.studentRepository = studentRepository;
     }
 
-    async execute(): Promise<StudentResponseDTO[]> {
+    async execute(): Promise<StudentCreateResponseDTO[]> {
         const students = await this.studentRepository.findAll();
-        return students.map(student => new StudentResponseDTO(student));
+        return students.map(student => new StudentCreateResponseDTO(student));
     }
 }
