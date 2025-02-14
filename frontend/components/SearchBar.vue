@@ -1,6 +1,6 @@
 <template>
   <v-row align="center" class="search-bar">
-    <v-col cols="6">
+    <v-col cols="9">
       <v-text-field
           :model-value="searchQuery"
           @update:model-value="updateSearch"
@@ -11,7 +11,7 @@
           append-inner-icon="mdi-magnify"
       />
     </v-col>
-    <v-col cols="6" class="d-flex justify-end">
+    <v-col cols="3" class="d-flex justify-end">
       <v-btn color="primary" @click="emit('addStudent')">Cadastrar Aluno</v-btn>
     </v-col>
   </v-row>
@@ -33,7 +33,7 @@ const updateSearch = (value) => {
 
 <style scoped lang="scss">
 .search-bar {
-  margin-bottom: 1rem;
+  margin-bottom: 0.2rem;
 }
 
 .search-input {
@@ -41,8 +41,6 @@ const updateSearch = (value) => {
 }
 
 .search-btn {
-  height: 2.5rem;
-  min-width: 8rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 </style>
