@@ -21,7 +21,7 @@ describe("Delete Student Use Case", () => {
         jest.restoreAllMocks();
     });
 
-    it("should delete a student successfully", async () => {
+    it("should delete a] student successfully", async () => {
         await expect(deleteStudentUseCase.execute(1)).resolves.not.toThrow();
     });
 

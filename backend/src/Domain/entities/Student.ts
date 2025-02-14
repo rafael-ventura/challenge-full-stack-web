@@ -7,8 +7,7 @@ export class Student {
     public createdAt?: Date;
     public updatedAt?: Date;
 
-    constructor(id: number | undefined, name: string, email: string, ra: string, cpf: string) {
-        this.id = id;
+    constructor(name: string, email: string, ra: string, cpf: string) {
         this.name = name;
         this.email = email;
         this.ra = ra;

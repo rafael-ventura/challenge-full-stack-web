@@ -2,6 +2,7 @@ import {StudentRepository} from "../../Infrastructure/repositories/StudentReposi
 import {Student} from "../../Domain/entities/Student";
 import {AppError} from "../../shared/errors/AppError";
 import {StudentUpdateDTO} from "../../Api/DTOs/StudentUpdateDTO";
+import {DataUtils} from "../../shared/utils/dataUtils";
 
 export class UpdateStudent {
     private studentRepository: StudentRepository;
@@ -28,6 +29,10 @@ export class UpdateStudent {
     private async validateStudentUpdate(studentId: number, updateStudentReq: StudentUpdateDTO): Promise<Student> {
         if (!updateStudentReq.name || !updateStudentReq.email) {
             throw new AppError('FIELD_REQUIRED');
+        }
+
+        if (!DataUtils.isValidEmail(updateStudentReq.email)) {
+            throw new AppError('INVALID_EMAIL');
         }
 
         const studentFromDb = await this.studentRepository.findById(studentId);

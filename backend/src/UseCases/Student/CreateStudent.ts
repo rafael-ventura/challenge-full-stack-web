@@ -2,6 +2,7 @@ import {StudentRepository} from '../../Infrastructure/repositories/StudentReposi
 import {AppError} from '../../shared/errors/AppError';
 import {Student} from '../../Domain/entities/Student';
 import {StudentCreateDTO} from "../../Api/DTOs/StudentCreateDTO";
+import {DataUtils} from "../../shared/utils/dataUtils";
 
 export class CreateStudent {
     private studentRepository: StudentRepository;
@@ -13,13 +14,7 @@ export class CreateStudent {
     async execute(studentData: StudentCreateDTO): Promise<Student> {
         await this.validateStudentData(studentData);
 
-        const student = new Student(
-            undefined,
-            studentData.name,
-            studentData.email,
-            studentData.ra,
-            studentData.cpf
-        );
+        const student = new Student(studentData.name, studentData.email, studentData.ra, studentData.cpf);
 
         return await this.studentRepository.create(student);
     }
@@ -35,11 +30,11 @@ export class CreateStudent {
             throw new AppError('INVALID_NAME');
         }
 
-        if (!this.isValidEmail(email)) {
+        if (!DataUtils.isValidEmail(email)) {
             throw new AppError('INVALID_EMAIL');
         }
 
-        if (!this.isValidCPF(cpf)) {
+        if (!DataUtils.isValidCPF(cpf)) {
             throw new AppError('INVALID_CPF');
         }
 
@@ -57,15 +52,5 @@ export class CreateStudent {
         if (cpfExists) {
             throw new AppError('CPF_ALREADY_EXISTS');
         }
-    }
-
-    private isValidEmail(email: string): boolean {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    private isValidCPF(cpf: string): boolean {
-        const cpfRegex = /^\d{11}$/;
-        return cpfRegex.test(cpf);
     }
 }

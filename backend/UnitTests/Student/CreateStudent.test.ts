@@ -3,7 +3,7 @@ import {StudentRepository} from "../../src/Infrastructure/repositories/StudentRe
 import {jest} from "@jest/globals";
 import {AppError} from "../../src/shared/errors/AppError";
 import {Student} from "../../src/Domain/entities/Student";
-import {CreateStudentDTO} from "../../src/Api/DTOs/CreateStudentDTO";
+import {StudentCreateDTO} from "../../src/Api/DTOs/StudentCreateDTO";
 
 describe("Create Student Use Case", () => {
     let createStudentUseCase: CreateStudent;
@@ -25,7 +25,7 @@ describe("Create Student Use Case", () => {
     });
 
     it("should create a student successfully", async () => {
-        const studentDto: CreateStudentDTO = {
+        const studentDto: StudentCreateDTO = {
             name: "John Doe",
             email: "john.doe@example.com",
             ra: "14578",
@@ -40,7 +40,7 @@ describe("Create Student Use Case", () => {
     });
 
     it('should throw an error when required fields are missing', async () => {
-        const studentDto: CreateStudentDTO = {
+        const studentDto: StudentCreateDTO = {
             name: 'John Doe',
             email: '@example.com',
             ra: '',
@@ -54,7 +54,7 @@ describe("Create Student Use Case", () => {
             new Student("Existing User", "test@example.com", "67890", "987.654.321-00")
         );
 
-        const studentDto: CreateStudentDTO = {
+        const studentDto: StudentCreateDTO = {
             name: "John Doe",
             email: "test@example.com",
             ra: "12345",
@@ -69,7 +69,7 @@ describe("Create Student Use Case", () => {
             new Student("Another User", "another@example.com", "12345", "111.222.333-44")
         );
 
-        const studentDto: CreateStudentDTO = {
+        const studentDto: StudentCreateDTO = {
             name: "John Doe",
             email: "john.doe@example.com",
             ra: "12345",

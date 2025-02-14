@@ -2,7 +2,7 @@ import {jest} from "@jest/globals";
 import {UpdateStudent} from "../../src/UseCases/Student/UpdateStudent";
 import {StudentRepository} from "../../src/Infrastructure/repositories/StudentRepository";
 import {Student} from "../../src/Domain/entities/Student";
-import {UpdateStudentDTO} from "../../src/Api/DTOs/UpdateStudentDTO";
+import {StudentUpdateDTO} from "../../src/Api/DTOs/StudentUpdateDTO";
 import {AppError} from "../../src/shared/errors/AppError";
 
 describe("Update Student Use Case", () => {
@@ -23,7 +23,7 @@ describe("Update Student Use Case", () => {
     });
 
     it("should update a student successfully", async () => {
-        const studentDto: UpdateStudentDTO = {
+        const studentDto: StudentUpdateDTO = {
             name: "Updated Name",
             email: "updated@example.com",
         };
@@ -39,7 +39,7 @@ describe("Update Student Use Case", () => {
     it("should throw an error if student is not found", async () => {
         jest.spyOn(studentRepository, "findById").mockResolvedValue(null);
 
-        const studentDto: UpdateStudentDTO = {
+        const studentDto: StudentUpdateDTO = {
             name: "Updated Name",
             email: "updated@example.com",
         };
