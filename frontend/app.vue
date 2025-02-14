@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <Sidebar v-model:drawer="drawer" />
+    <Sidebar v-if="isAuthenticated" v-model:drawer="drawer"/>
     <v-main :class="{ 'main-expanded': drawer, 'main-collapsed': !drawer }">
-      <Header @toggleSidebar="toggleSidebar" />
+      <Header v-if="isAuthenticated" @toggleSidebar="toggleSidebar"/>
       <v-container>
         <NuxtPage />
       </v-container>
@@ -11,15 +11,37 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref, watchEffect} from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Header from "@/components/Header.vue";
+import {useState} from "#app";
 
 const drawer = ref(true);
-
 const toggleSidebar = () => {
   drawer.value = !drawer.value;
 };
+
+const isAuthenticated = useState("isAuthenticated", () => false);
+
+onMounted(() => {
+  if (process.client) {
+    const token = localStorage.getItem("token");
+    isAuthenticated.value = !!token;
+  }
+});
+
+const checkAuth = () => {
+  if (process.client) {
+    const token = localStorage.getItem("token");
+    isAuthenticated.value = !!token;
+
+    if (!token) {
+      navigateTo("/auth/login");
+    }
+  }
+};
+
+watchEffect(checkAuth);
 </script>
 
 <style lang="scss">

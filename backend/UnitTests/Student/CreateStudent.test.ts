@@ -1,7 +1,6 @@
 import {CreateStudent} from "../../src/UseCases/Student/CreateStudent";
 import {StudentRepository} from "../../src/Infrastructure/repositories/StudentRepository";
 import {jest} from "@jest/globals";
-import {AppError} from "../../src/shared/errors/AppError";
 import {Student} from "../../src/Domain/entities/Student";
 import {StudentCreateDTO} from "../../src/Api/DTOs/StudentCreateDTO";
 
@@ -15,8 +14,9 @@ describe("Create Student Use Case", () => {
 
         jest.spyOn(studentRepository, "findByEmail").mockResolvedValue(null);
         jest.spyOn(studentRepository, "findByRA").mockResolvedValue(null);
+        jest.spyOn(studentRepository, "findByCPF").mockResolvedValue(null);
         jest.spyOn(studentRepository, "create").mockResolvedValue(
-            new Student("John Doe", "john.doe@example.com", "12345", "123.456.789-10")
+            new Student("John Doe", "john.doe@example.com", "12345", "12345678901")
         );
     });
 
@@ -24,12 +24,12 @@ describe("Create Student Use Case", () => {
         jest.restoreAllMocks();
     });
 
-    it("should create a student successfully", async () => {
+    it("✅ should create a student successfully", async () => {
         const studentDto: StudentCreateDTO = {
             name: "John Doe",
             email: "john.doe@example.com",
             ra: "14578",
-            cpf: "123.456.789-10",
+            cpf: "12345678901",
         };
 
         const student = await createStudentUseCase.execute(studentDto);
@@ -39,43 +39,95 @@ describe("Create Student Use Case", () => {
         expect(student.email).toBe("john.doe@example.com");
     });
 
-    it('should throw an error when required fields are missing', async () => {
+    it("❌ should throw an error when required fields are missing", async () => {
         const studentDto: StudentCreateDTO = {
-            name: 'John Doe',
-            email: '@example.com',
-            ra: '',
-            cpf: '123.456.789-10'
-        }
-        await expect(createStudentUseCase.execute(studentDto)).rejects.toThrow(AppError);
+            name: "",
+            email: "",
+            ra: "",
+            cpf: "",
+        };
+
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({
+            internalCode: "VALIDATION_ERROR",
+        });
     });
 
-    it("should throw an error if email already exists", async () => {
+    it("❌ should throw an error if name is too short", async () => {
+        const studentDto: StudentCreateDTO = {
+            name: "J",
+            email: "john.doe@example.com",
+            ra: "12345",
+            cpf: "12345678901",
+        };
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({
+            internalCode: "INVALID_NAME",
+        })
+    });
+
+    it("❌ should throw an error if email is invalid", async () => {
+        const studentDto: StudentCreateDTO = {
+            name: "John Doe",
+            email: "invalid-email",
+            ra: "12345",
+            cpf: "12345678901",
+        };
+
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({internalCode: "INVALID_EMAIL"});
+    });
+
+    it("❌ should throw an error if CPF is invalid", async () => {
+        const studentDto: StudentCreateDTO = {
+            name: "John Doe",
+            email: "john.doe@example.com",
+            ra: "12345",
+            cpf: "1234",
+        };
+
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({internalCode: "INVALID_CPF"});
+    });
+
+    it("❌ should throw an error if email already exists", async () => {
         jest.spyOn(studentRepository, "findByEmail").mockResolvedValue(
-            new Student("Existing User", "test@example.com", "67890", "987.654.321-00")
+            new Student("Existing User", "test@example.com", "67890", "98765432100")
         );
 
         const studentDto: StudentCreateDTO = {
             name: "John Doe",
             email: "test@example.com",
             ra: "12345",
-            cpf: "123.456.789-10",
+            cpf: "12345678901",
         };
 
-        await expect(createStudentUseCase.execute(studentDto)).rejects.toThrow("Email already exists");
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({internalCode: "EMAIL_ALREADY_EXISTS"});
     });
 
-    it("should throw an error if RA already exists", async () => {
+    it("❌ should throw an error if RA already exists", async () => {
         jest.spyOn(studentRepository, "findByRA").mockResolvedValue(
-            new Student("Another User", "another@example.com", "12345", "111.222.333-44")
+            new Student("Another User", "another@example.com", "12345", "11122233344")
         );
 
         const studentDto: StudentCreateDTO = {
             name: "John Doe",
             email: "john.doe@example.com",
             ra: "12345",
-            cpf: "123.456.789-10",
+            cpf: "12345678901",
         };
 
-        await expect(createStudentUseCase.execute(studentDto)).rejects.toThrow("RA already exists");
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({internalCode: "RA_ALREADY_EXISTS"});
+    });
+
+    it("❌ should throw an error if CPF already exists", async () => {
+        jest.spyOn(studentRepository, "findByCPF").mockResolvedValue(
+            new Student("User Exists", "existing@example.com", "54321", "12345678901")
+        );
+
+        const studentDto: StudentCreateDTO = {
+            name: "John Doe",
+            email: "john.doe@example.com",
+            ra: "54321",
+            cpf: "12345678901",
+        };
+
+        await expect(createStudentUseCase.execute(studentDto)).rejects.toMatchObject({internalCode: "CPF_ALREADY_EXISTS"});
     });
 });

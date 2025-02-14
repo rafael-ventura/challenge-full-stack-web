@@ -1,61 +1,76 @@
-## Diário de Desenvolvimento 
-### Configuração do Backend - 10/02/2025
-Hoje finalizei a estruturação do backend do projeto, desde a arquitetura até a implementação dos primeiros endpoints e testes unitários. O objetivo principal foi garantir uma base sólida, organizada e modular para facilitar futuras evoluções.
+# COMMENTS.md - A+ Educação Challenge
 
-Definição da Arquitetura e Stack
-Decidi seguir a Clean Architecture para separar as responsabilidades do código e manter uma estrutura mais organizada. Isso facilita a manutenção e os testes. Apesar de adicionar um pouco mais de complexidade inicial, a organização e escalabilidade do projeto compensam.
+## 1️⃣ Decisão de Arquitetura Utilizada
 
-#### A stack escolhida para o backend inclui:
+### Backend:
+Adotei a **Clean Architecture**, separando a lógica de negócio da infraestrutura. Isso garante modularidade e facilita testes e futuras expansões.
 
-- Node.js + TypeScript;
-- Express.js;
-- Sequelize;
-- PostgreSQL;
-- Jest;
+- **API**: Camada de comunicação com o cliente, contendo os controladores e os endpoints.
+- **Use Cases**: Contêm as regras de negócio da aplicação, como criação, listagem, atualização e remoção de alunos.
+- **Infrastructure**: Responsável pelo acesso ao banco de dados (PostgreSQL via Sequelize).
+- **Middlewares**: Middleware global de erro e middleware de async handler para evitar try/catch redundantes.
 
-#### Modelagem e Configuração do Banco de Dados
+### Frontend:
+Usei **Nuxt 3 + TypeScript + Vuetify**, mantendo componentes modulares e centralizando regras de validação para facilitar reutilização.
 
-O banco de dados foi modelado com a tabela principal:
+- **Componentização**: Separei componentes como `SidebarProfile.vue`, `StudentTable.vue`, entre outros.
+- **Composables**: Criados para lidar com chamadas HTTP (`useStudentApi.ts`) e notificações (`useNotification.ts`).
+- **SCSS**: Padronizei cores e estilos globais no `app.scss` e referenciei nos componentes com `@use`.
+- **Validação**: Todas as regras de formulários foram centralizadas no `validationRules.ts`.
 
-**Students**: Guarda os dados dos alunos.
+---
 
-![Modelagem do Banco de Dados](mockups/img_1.png)
+## 2️⃣ Bibliotecas Utilizadas
 
-Usei o Sequelize como ORM para mapear a tabela e gerenciar as operações no banco.
+- **Backend**:
+    - `express` (framework da API)
+    - `sequelize` + `pg` (ORM e banco de dados PostgreSQL)
+    - `jest` (testes unitários)
+    - `jsonwebtoken` (para autenticação JWT)
+    - `bcryptjs` (criptografia de senhas)
+    - `dotenv` (variáveis de ambiente)
 
-#### Estrutura do Backend
+- **Frontend**:
+    - `nuxt` (framework Vue.js)
+    - `vuetify` (componentes de UI)
+    - `vue-router` (navegação)
+    - `pinia` (gerenciamento de estado)
+    - `axios` (requisições HTTP)
 
-A aplicação foi organizada seguindo os princípios da Clean Architecture:
+---
 
-![Arquitetura do Fluxo](mockups/img.png)
+## 3️⃣ Melhorias Futuras
 
-**API**: Camada de comunicação com o cliente, contendo os controladores e os endpoints.
+Se houvesse mais tempo, eu:
+- **Finalizaria a autenticação JWT** com proteção de rotas e roles.
+- Melhoraria a **componentização** e otimização de código.
+- Criaria **sistema de telemetria e auditoria** usando os campos `created_at` e `updated_at` para logs.
+- Criaria **filtros** e opções de ordenação mais robustas na listagem de alunos.
+- Melhoraria a **documentação**, incluindo OpenAPI/Swagger para a API.
+- Adicionaria paginação e filtros na listagem de alunos, para melhorar a performance.
+- se tive-sse mais tempo faria uma logiva de remember me para o login.
 
-**Use Cases**: Contêm as regras de negócio da aplicação, como criação, listagem, atualização e remoção de alunos.
+---
 
-**Infrastructure**: Camada de infraestrutura, responsável por lidar com detalhes técnicos, como o banco de dados.
+## 4️⃣ Requisitos Entregues e Não Entregues
 
-Criei os endpoints básicos para gerenciar alunos:
+✅ **Funcionalidades obrigatórias entregues**:
+- CRUD completo de alunos
+- Validação de campos
+- Interface responsiva e estilizada
+- Testes unitários no backend
+- **Autenticação JWT básica implementada**
 
-1. POST /students → Criação de um novo aluno.
-2. GET /students → Listagem de alunos.
-3. PUT /students/:id → Atualização dos dados de um aluno.
-4. DELETE /students/:id → Remoção de um aluno.
+Melhorias para o futuro:
 
-#### Middlewares e Tratamento de Erros
-Implementei um middleware de erro para capturar exceções e retornar mensagens padronizadas. 
-Além disso, configurei um middleware para lidar com funções assíncronas de forma centralizada, evitando a necessidade de try/catch repetidos nos controladores.
+- **Autenticação com Google**
+- **Testes no frontend**
+- **Uso dos campos created_at e updated_at para auditoria**
+- **Dashboard de métricas (telemetria)**
 
-#### Testes Unitários
+---
 
-Para garantir a qualidade do código, escrevi testes unitários cobrindo os casos de uso do sistema:
+## 5️⃣ Instruções para rodar o projeto
 
-**CreateStudent:** Testa a criação de um aluno, validando regras como e-mail e RA únicos.
+Entrega feita com dedicação! 
 
-**ListStudents:** Garante que todos os alunos sejam retornados corretamente.
-
-**UpdateStudent:** Verifica a atualização dos dados do aluno, garantindo que informações imutáveis não sejam alteradas.
-
-**DeleteStudent:** Testa a exclusão de um aluno e os erros caso ele não exista.
-
-_Os testes foram feitos com Jest e mocks do repositório para evitar dependência direta do banco._

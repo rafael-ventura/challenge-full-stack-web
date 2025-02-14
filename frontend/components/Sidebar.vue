@@ -7,7 +7,7 @@
       width="300"
       permanent
   >
-    <SidebarProfile/>
+    <Profile/>
 
     <v-list-subheader class="subheader">Módulo Acadêmico</v-list-subheader>
 
@@ -20,9 +20,6 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
-import SidebarProfile from "@/components/Profile.vue";
-
 defineProps({
   drawer: Boolean,
 });
