@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+      v-if="isClient"
       :model-value="drawer"
       @update:model-value="emit('update:drawer', $event)"
       app
@@ -35,14 +36,20 @@
 </template>
 
 <script setup>
+import {onMounted, ref} from "vue";
+
 defineProps({
   drawer: Boolean,
 });
 
 const emit = defineEmits(["update:drawer"]);
+
+const isClient = ref(false);
+
+onMounted(() => {
+  isClient.value = true;
+});
 </script>
-
-
 <style scoped lang="scss">
 $red-primary: #c8102e;
 $red-dark: #a00d26;

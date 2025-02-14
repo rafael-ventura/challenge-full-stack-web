@@ -1,5 +1,5 @@
 import {StudentRepository} from '../../Infrastructure/repositories/StudentRepository';
-import {StudentResponseDTO} from '../../Api/DTOs/CreateStudentResponseDTO';
+import {StudentResponseDTO} from '../../Api/DTOs/StudentResponseDTO';
 
 export class ListStudents {
     private studentRepository: StudentRepository;

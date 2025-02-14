@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="modelValue" max-width="500px">
+  <v-dialog :model-value="modelValue" max-width="500px" @update:modelValue="emit('update:modelValue', $event)">
     <v-card>
       <v-card-title>Editar Aluno</v-card-title>
       <v-card-text>
@@ -21,11 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineProps, ref, watch} from "vue";
-import {useStudentApi} from "@/composables/useStudentApi";
-import {Student} from "@/models/Student";
+import { defineEmits, defineProps, ref, watch } from "vue";
+import { useStudentApi } from "@/composables/useStudentApi";
+import { Student } from "@/models/Student";
 
-const {updateStudent} = useStudentApi();
+const { updateStudent } = useStudentApi();
 const props = defineProps<{ modelValue: boolean; student: Student | null }>();
 const emit = defineEmits(["update:modelValue", "studentUpdated"]);
 
@@ -33,10 +33,10 @@ const student = ref<Student | null>(null);
 const valid = ref(false);
 
 watch(() => props.student, (newValue) => {
-  student.value = newValue ? {...newValue} : null;
+  student.value = newValue ? { ...newValue } : null;
 });
 
-const rules = {required: (v: string) => !!v || "Este campo é obrigatório."};
+const rules = { required: (v: string) => !!v || "Este campo é obrigatório." };
 
 const saveChanges = async () => {
   if (student.value) {

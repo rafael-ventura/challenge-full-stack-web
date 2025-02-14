@@ -25,6 +25,10 @@ export class CreateStudent {
             throw new AppError('RA_ALREADY_EXISTS');
         }
 
-        return await this.studentRepository.create(new Student(data.name, data.email, data.ra, data.cpf));
+
+        const student = new Student(undefined, data.name, data.email, data.ra, data.cpf);
+        return await this.studentRepository.create(student);
     }
+
 }
+

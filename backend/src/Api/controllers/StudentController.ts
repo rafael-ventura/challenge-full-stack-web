@@ -4,7 +4,7 @@ import {ListStudents} from "../../UseCases/Student/ListStudents";
 import {UpdateStudent} from "../../UseCases/Student/UpdateStudent";
 import {DeleteStudent} from "../../UseCases/Student/DeleteStudent";
 import {CreateStudentDTO} from "../DTOs/CreateStudentDTO";
-import {StudentResponseDTO} from "../DTOs/CreateStudentResponseDTO";
+import {StudentResponseDTO} from "../DTOs/StudentResponseDTO";
 import {UpdateStudentDTO} from "../DTOs/UpdateStudentDTO";
 
 export function StudentController(
@@ -18,6 +18,7 @@ export function StudentController(
             try {
                 const studentData: CreateStudentDTO = req.body;
                 const student = await createStudentUseCase.execute(studentData);
+
                 return res.status(201).json(new StudentResponseDTO(student));
             } catch (error) {
                 next(error);
@@ -32,6 +33,7 @@ export function StudentController(
                 next(error);
             }
         },
+
 
         update: async (req: Request, res: Response, next: NextFunction) => {
             try {

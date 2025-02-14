@@ -4,9 +4,8 @@ export function useStudentApi() {
 
     const fetchStudents = async () => {
         try {
-            const { data, error } = await useFetch(`${apiBaseUrl}/students`, { method: "GET" });
-            if (error.value) throw new Error(error.value.message);
-            return data.value || [];
+            const data = await $fetch(`${apiBaseUrl}/students`, {method: "GET"});
+            return Array.isArray(data) ? data : data?.data || [];
         } catch (err) {
             console.error("❌ Erro ao buscar alunos:", err);
             return [];
@@ -15,26 +14,26 @@ export function useStudentApi() {
 
     const createStudent = async (student: Student) => {
         try {
-            const { data, error } = await useFetch(`${apiBaseUrl}/students`, {
+            const payload = {
+                name: student.name,
+                email: student.email
+            };
+            return await $fetch(`${apiBaseUrl}/students`, {
                 method: "POST",
-                body: student,
+                body: payload,
             });
-            if (error.value) throw new Error(error.value.message);
-            return data.value;
         } catch (err) {
             console.error("❌ Erro ao criar aluno:", err);
             throw err;
         }
     };
 
-    const updateStudent = async (id: number, student: Partial<Student>) => {
+    const updateStudent = async (ra: string, student: Partial<Student>) => {
         try {
-            const { data, error } = await useFetch(`${apiBaseUrl}/students/${id}`, {
+            return await $fetch(`${apiBaseUrl}/students/${ra}`, {
                 method: "PUT",
                 body: student,
             });
-            if (error.value) throw new Error(error.value.message);
-            return data.value;
         } catch (err) {
             console.error("❌ Erro ao atualizar aluno:", err);
             throw err;
@@ -43,10 +42,7 @@ export function useStudentApi() {
 
     const deleteStudent = async (id: number) => {
         try {
-            const { error } = await useFetch(`${apiBaseUrl}/students/${id}`, {
-                method: "DELETE",
-            });
-            if (error.value) throw new Error(error.value.message);
+            return await $fetch(`${apiBaseUrl}/students/${id}`, {method: "DELETE"});
         } catch (err) {
             console.error("❌ Erro ao excluir aluno:", err);
             throw err;

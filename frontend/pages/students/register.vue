@@ -43,7 +43,7 @@ import {onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useStudentApi} from "@/composables/useStudentApi";
 import {Student} from "@/models/Student";
-import {errorMapper} from "@/models/errorMapper";
+import {getErrorMessage} from "@/utils/errorMessages";
 
 const {fetchStudents, updateStudent, createStudent} = useStudentApi();
 const route = useRoute();
@@ -71,11 +71,16 @@ const rules = {
 };
 
 const saveStudent = async () => {
+  console.log('Enviando dados do aluno:', student.value);
+
   if (!valid.value) return;
 
   try {
     if (isEditMode.value) {
-      await updateStudent(student.value.id!, student.value);
+      await updateStudent(student.value.id!, {
+        name: student.value.name,
+        email: student.value.email
+      });
       showNotification("Aluno atualizado com sucesso!", "success");
     } else {
       await createStudent(student.value);
@@ -86,9 +91,10 @@ const saveStudent = async () => {
     form.value?.resetValidation();
   } catch (error: any) {
     console.error("❌ Erro ao salvar aluno:", error);
-    showNotification(errorMapper(error?.response?._data?.error), "error");
+    showNotification(getErrorMessage(error?.response?._data?.error, "Ocorreu um erro inesperado."), "error");
   }
 };
+
 
 const cancel = () => router.push("/students");
 

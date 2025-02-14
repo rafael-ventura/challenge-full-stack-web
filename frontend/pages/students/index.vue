@@ -11,7 +11,7 @@
     <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
     <StudentsTable
-        :students="filteredStudents"
+        :students="students"
         :headers="headers"
         :loading="loading"
         :itemsPerPage="itemsPerPage"
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useStudentApi} from "@/composables/useStudentApi";
 import {useRouter} from "vue-router";
 import {Student} from "@/models/Student";
@@ -58,7 +58,7 @@ const itemsPerPage = ref(10);
 const loading = ref(false);
 const deleteDialog = ref(false);
 const editDialog = ref(false);
-const studentToDelete = ref<number | null>(null);
+const studentToDelete = ref<string | null>(null);
 const selectedStudent = ref<Student | null>(null);
 
 const headers = [
@@ -68,21 +68,13 @@ const headers = [
   { title: "Ações", key: "actions", sortable: false },
 ];
 
-const filteredStudents = computed(() =>
-    search.value
-        ? students.value.filter(student =>
-            [student.name, student.ra, student.cpf].some(field =>
-                field.toLowerCase().includes(search.value.toLowerCase())
-            )
-        )
-        : students.value
-);
-
 const loadStudents = async () => {
   loading.value = true;
   try {
     const result = await fetchStudents();
     students.value = Array.isArray(result) ? result : result?.data || [];
+
+    console.log("📥 Alunos carregados:", students.value);
   } catch (error) {
     console.error("❌ Erro ao carregar alunos:", error);
     students.value = [];
@@ -94,47 +86,33 @@ const loadStudents = async () => {
 const openAddStudentPage = () => router.push("/students/register");
 
 const openEditStudentModal = (student: Student) => {
-  selectedStudent.value = {...student};
+  console.log("✏️ Editando aluno:", student);
+  selectedStudent.value = { ...student };
   editDialog.value = true;
 };
 
-const confirmDeleteStudent = (id: number) => {
-  studentToDelete.value = id;
+const confirmDeleteStudent = (studentRa: string) => {
+  console.log("🟡 Preparando para excluir aluno com RA:", studentRa);
+  studentToDelete.value = studentRa;
   deleteDialog.value = true;
 };
 
 const deleteStudent = async () => {
-  if (studentToDelete.value) {
+  if (!studentToDelete.value) return;
+
+  console.log("🛑 Excluindo aluno com RA:", studentToDelete.value);
+
+  try {
     await deleteStudentApi(studentToDelete.value);
-    deleteDialog.value = false;
-    await loadStudents();
+    console.log("✅ Aluno excluído com sucesso.");
+  } catch (error) {
+    console.error("❌ Erro ao excluir aluno:", error);
   }
+
+  deleteDialog.value = false;
+  studentToDelete.value = null;
+  await loadStudents();
 };
 
 onMounted(loadStudents);
 </script>
-
-<style lang="scss">
-$red-primary: #c8102e;
-$red-light: #e63946;
-$grey-light: #f5f5f5;
-
-.students-container {
-  width: calc(100% - 150px);
-  transition: margin-left 0.3s ease-in-out;
-}
-
-.custom-table {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-
-  th {
-    background-color: $red-primary;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 10px;
-  }
-}
-</style>
