@@ -1,11 +1,15 @@
+import type {Student} from "~/models/Student";
+
 export function useStudentApi() {
     const config = useRuntimeConfig();
     const apiBaseUrl = config.public.apiBaseUrl;
 
     const fetchStudents = async () => {
         try {
-            const data = await $fetch(`${apiBaseUrl}/students`, {method: "GET"});
-            return Array.isArray(data) ? data : data?.data || [];
+            const response = await $fetch(`${apiBaseUrl}/students`, {method: "GET"});
+
+            console.log("📥 Resposta da API:", response);
+            return response;
         } catch (err) {
             console.error("❌ Erro ao buscar alunos:", err);
             return [];
@@ -16,7 +20,9 @@ export function useStudentApi() {
         try {
             const payload = {
                 name: student.name,
-                email: student.email
+                email: student.email,
+                ra: student.ra,
+                cpf: student.cpf,
             };
             return await $fetch(`${apiBaseUrl}/students`, {
                 method: "POST",
@@ -28,9 +34,9 @@ export function useStudentApi() {
         }
     };
 
-    const updateStudent = async (ra: string, student: Partial<Student>) => {
+    const updateStudent = async (id: number, student: Partial<Student>) => {
         try {
-            return await $fetch(`${apiBaseUrl}/students/${ra}`, {
+            return await $fetch(`${apiBaseUrl}/students/${id}`, {
                 method: "PUT",
                 body: student,
             });
