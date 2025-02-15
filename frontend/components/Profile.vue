@@ -1,13 +1,10 @@
 <template>
   <v-sheet class="pa-4 sidebar-header d-flex flex-column align-center">
-    <!-- Linha com o Logo e o Botão de Logout -->
     <v-row class="w-100 align-center">
       <v-col cols="10" class="d-flex justify-center">
-        <!-- Logo -->
         <v-img src="https://maisaedu.com.br/hubfs/site-grupo-a/logo-mais-a-educacao.svg" class="logo" contain></v-img>
       </v-col>
       <v-col cols="2" class="d-flex justify-end">
-        <!-- Botão de Logout -->
         <v-btn icon="mdi-logout" variant="text" color="white" size="24" @click="logout"></v-btn>
       </v-col>
     </v-row>

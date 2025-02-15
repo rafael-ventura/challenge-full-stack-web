@@ -12,7 +12,7 @@ export class UpdateStudent {
     }
 
     async execute(studentId: number, updateStudentReq: StudentUpdateDTO): Promise<Student> {
-        const existingStudent = await this.validateStudentUpdate(studentId, updateStudentReq);
+        const existingStudent = await this.validate(studentId, updateStudentReq);
 
         const updatedStudent = await this.studentRepository.update(studentId, {
             name: updateStudentReq.name ?? existingStudent.name,
@@ -26,7 +26,7 @@ export class UpdateStudent {
         return updatedStudent;
     }
 
-    private async validateStudentUpdate(studentId: number, updateStudentReq: StudentUpdateDTO): Promise<Student> {
+    private async validate(studentId: number, updateStudentReq: StudentUpdateDTO): Promise<Student> {
         if (!updateStudentReq.name || !updateStudentReq.email) {
             throw new AppError('FIELD_REQUIRED');
         }

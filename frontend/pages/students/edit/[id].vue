@@ -10,11 +10,8 @@
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid">
-          <!-- Apenas Nome e E-mail são validados -->
           <v-text-field label="Nome" v-model="student.name" :rules="[rules.required]" required />
           <v-text-field label="E-mail" v-model="student.email" :rules="[rules.required, rules.email]" required />
-
-          <!-- RA e CPF apenas exibem os dados, mas são desativados -->
           <v-text-field label="RA (Registro Acadêmico)" v-model="student.ra" disabled />
           <v-text-field label="CPF" v-model="student.cpf" disabled />
         </v-form>

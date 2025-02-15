@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import {ref} from "vue";
 
 export function useNotification() {
     const snackbar = ref({
@@ -8,7 +8,7 @@ export function useNotification() {
         timeout: 3000,
     });
 
-    const showNotification = (message: string, type: "success" | "error" = "success", delay = 4000) => {
+    const showNotification = (message: string, type: "success" | "error" = "success", delay = 3000) => {
         snackbar.value = { show: true, message, color: type, timeout: delay };
     };
 

@@ -4,16 +4,20 @@ export function useAuthApi() {
     const isAuthenticated = useState("isAuthenticated", () => false);
     const login = async (credentials: { email: string; password: string }) => {
         try {
-            const response = await $fetch<{ user: any; token: string }>(`${apiBaseUrl}/auth/login`, {
-                method: "POST",
-                body: credentials,
-            });
+            const response = await $fetch<{ id: number; name: string; email: string; token: string }>(
+                `${apiBaseUrl}/auth/login`,
+                {
+                    method: "POST",
+                    body: credentials,
+                }
+            );
 
-            const {user, token} = response;
-            localStorage.setItem("token", token);
-            localStorage.setItem("userId", user.id);
-            localStorage.setItem("userName", user.name);
-            localStorage.setItem("userEmail", user.email);
+            console.log("✅ response:", response);
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("userId", response.id.toString());
+            localStorage.setItem("userName", response.name);
+            localStorage.setItem("userEmail", response.email);
+
             isAuthenticated.value = true;
             return response;
         } catch (err) {

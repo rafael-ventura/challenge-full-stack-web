@@ -11,10 +11,10 @@
 </template>
 
 <script setup>
-import {ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
+import {navigateTo, useRoute, useState} from "#app";
 import Sidebar from "@/components/Sidebar.vue";
 import Header from "@/components/Header.vue";
-import {useState} from "#app";
 
 const drawer = ref(true);
 const toggleSidebar = () => {
@@ -22,6 +22,7 @@ const toggleSidebar = () => {
 };
 
 const isAuthenticated = useState("isAuthenticated", () => false);
+const route = useRoute();
 
 onMounted(() => {
   if (process.client) {
@@ -35,7 +36,9 @@ const checkAuth = () => {
     const token = localStorage.getItem("token");
     isAuthenticated.value = !!token;
 
-    if (!token) {
+    const publicRoutes = ["/auth/login", "/auth/register"];
+
+    if (!token && !publicRoutes.includes(route.path)) {
       navigateTo("/auth/login");
     }
   }
@@ -43,14 +46,3 @@ const checkAuth = () => {
 
 watchEffect(checkAuth);
 </script>
-
-<style lang="scss">
-.main-expanded {
-  transition: margin-left 0.3s ease-in-out;
-}
-
-.main-collapsed {
-  margin-left: 0;
-  transition: margin-left 0.3s ease-in-out;
-}
-</style>

@@ -12,14 +12,14 @@ export class CreateStudent {
     }
 
     async execute(studentData: StudentCreateDTO): Promise<Student> {
-        await this.validateStudentData(studentData);
+        await this.validate(studentData);
 
         const student = new Student(studentData.name, studentData.email, studentData.ra, studentData.cpf);
 
         return await this.studentRepository.create(student);
     }
 
-    private async validateStudentData(studentData: StudentCreateDTO): Promise<void> {
+    private async validate(studentData: StudentCreateDTO): Promise<void> {
         const {name, email, ra, cpf} = studentData;
 
         if (!name || !email || !ra || !cpf) {

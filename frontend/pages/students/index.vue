@@ -10,7 +10,7 @@
           />
         </v-col>
         <v-col cols="3" class="d-flex justify-end">
-          <v-btn color="primary" @click="openAddStudentPage">Cadastrar Aluno</v-btn>
+          <v-btn color="red" @click="openAddStudentPage">Cadastrar Aluno</v-btn>
         </v-col>
       </v-row>
     </v-card>
@@ -29,8 +29,6 @@
     <v-alert v-if="!loading && students.length === 0" type="info" class="mt-4">
       Nenhum aluno encontrado.
     </v-alert>
-
-    <EditStudentModal v-model="editDialog" :student="selectedStudent" @studentUpdated="loadStudents"/>
 
     <v-dialog v-model="deleteDialog" max-width="400px">
       <v-card>
@@ -92,7 +90,7 @@ const loadStudents = async () => {
   loading.value = true;
   try {
     const result = await fetchStudents();
-    students.value = Array.isArray(result) ? result : result?.data ?? [];
+    students.value = Array.isArray(result) ? result : [];
 
     console.log("📥 Alunos carregados:", students.value);
   } catch (error) {

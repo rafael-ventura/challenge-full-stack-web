@@ -38,13 +38,15 @@ import {useNotification} from "@/composables/useNotification";
 const {login} = useAuthApi();
 const router = useRouter();
 const {snackbar, showNotification} = useNotification();
-
 const form = ref<any>(null);
 const valid = ref(false);
+const route = useRoute();
+
 const credentials = ref({
-  email: "",
-  password: "",
+  email: Array.isArray(route.query.email) ? route.query.email[0] || "" : (route.query.email as string) || "",
+  password: Array.isArray(route.query.password) ? route.query.password[0] || "" : (route.query.password as string) || "",
 });
+
 
 const rules = {
   required: (v: string) => !!v || "Este campo é obrigatório.",
@@ -55,13 +57,18 @@ const loginUser = async () => {
   if (!form.value?.validate()) return;
 
   try {
-    await login(credentials.value);
+    const response = await login(credentials.value);
+    if (!response || !response.id) {
+      throw new Error("Erro: Usuário inválido.");
+    }
+
     showNotification("Login realizado com sucesso!", "success");
     await router.push("/students");
   } catch (error: any) {
-    showNotification(error?.response?.data?.error || "Erro ao tentar fazer login", "error");
+    showNotification(error?.message || "Erro ao tentar fazer login", "error");
   }
 };
+
 
 const register = () => {
   router.push("/auth/register");

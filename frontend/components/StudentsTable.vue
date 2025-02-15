@@ -81,7 +81,7 @@ const confirmDelete = (student: Student) => {
     font-weight: bold;
     font-size: 16px;
     color: app.$white-text;
-    background-color: app.$red-primary;
+    background-color: red;
     text-align: center;
   }
 

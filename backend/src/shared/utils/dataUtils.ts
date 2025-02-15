@@ -6,8 +6,11 @@ export class DataUtils {
     }
 
     public static isValidCPF(cpf: string): boolean {
-        const cpfRegex = /^\d{11}$/;
-        return cpfRegex.test(cpf);
+        return /^\d{11}$/.test(cpf);
     }
 
+    public static isValidPassword(password: string): boolean {
+        // Password must have at least 8 characters, one letter and one number
+        return /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(password);
+    }
 }

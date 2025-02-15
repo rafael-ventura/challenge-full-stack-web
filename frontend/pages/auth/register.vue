@@ -32,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthApi } from "~/composables/useAuthApi";
-import { useRouter } from "vue-router";
-import { useNotification } from "@/composables/useNotification";
+import {useAuthApi} from "~/composables/useAuthApi";
+import {useRouter} from "vue-router";
+import {useNotification} from "@/composables/useNotification";
 
 const { register } = useAuthApi();
 const router = useRouter();
@@ -61,9 +61,16 @@ const registerUser = async () => {
   try {
     await register(user.value);
     showNotification("Cadastro realizado com sucesso!", "success");
-    router.push("/auth/login");
+
+    await router.push({
+      path: "/auth/login",
+      query: {
+        email: user.value.email,
+        password: user.value.password,
+      },
+    });
   } catch (error: any) {
-    showNotification(error?.response?.data?.error || "Erro ao tentar se cadastrar", "error");
+    showNotification(error?.response?._data?.error, "error");
   }
 };
 
