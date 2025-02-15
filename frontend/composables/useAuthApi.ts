@@ -12,7 +12,7 @@ export function useAuthApi() {
                 }
             );
 
-            console.log("✅ response:", response);
+            console.log("response:", response);
             localStorage.setItem("token", response.token);
             localStorage.setItem("userId", response.id.toString());
             localStorage.setItem("userName", response.name);
@@ -21,7 +21,7 @@ export function useAuthApi() {
             isAuthenticated.value = true;
             return response;
         } catch (err) {
-            console.error("❌ Erro ao fazer login:", err);
+            console.error(" Erro ao fazer login:", err);
             throw err;
         }
     };
@@ -33,7 +33,7 @@ export function useAuthApi() {
                 body: userData,
             });
         } catch (err) {
-            console.error("❌ Erro ao registrar usuário:", err);
+            console.error(" Erro ao registrar usuário:", err);
             throw err;
         }
     };
@@ -42,7 +42,7 @@ export function useAuthApi() {
         try {
             return await $fetch(`${apiBaseUrl}/auth/user`, {method: "GET"});
         } catch (err) {
-            console.error("❌ Erro ao buscar usuário:", err);
+            console.error(" Erro ao buscar usuário:", err);
             throw err;
         }
     };

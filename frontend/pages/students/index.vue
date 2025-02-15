@@ -94,7 +94,7 @@ const loadStudents = async () => {
 
     console.log("📥 Alunos carregados:", students.value);
   } catch (error) {
-    console.error("❌ Erro ao carregar alunos:", error);
+    console.error(" Erro ao carregar alunos:", error);
     students.value = [];
   } finally {
     loading.value = false;
@@ -120,9 +120,9 @@ const deleteStudent = async () => {
 
   try {
     await deleteStudentApi(studentToDelete.value);
-    console.log("✅ Aluno excluído com sucesso.");
+    console.log("Aluno excluído com sucesso.");
   } catch (error) {
-    console.error("❌ Erro ao excluir aluno:", error);
+    console.error(" Erro ao excluir aluno:", error);
   }
 
   deleteDialog.value = false;

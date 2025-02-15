@@ -11,7 +11,7 @@ export function useStudentApi() {
             console.log("Resposta da API:", response);
             return response;
         } catch (err) {
-            console.error("❌ Erro ao buscar alunos:", err);
+            console.error(" Erro ao buscar alunos:", err);
             return [];
         }
     };
@@ -30,7 +30,7 @@ export function useStudentApi() {
                 body: payload,
             });
         } catch (err) {
-            console.error("❌ Erro ao criar aluno:", err);
+            console.error(" Erro ao criar aluno:", err);
             throw err;
         }
     };
@@ -42,7 +42,7 @@ export function useStudentApi() {
                 body: student,
             });
         } catch (err) {
-            console.error("❌ Erro ao atualizar aluno:", err);
+            console.error(" Erro ao atualizar aluno:", err);
             throw err;
         }
     };
@@ -51,7 +51,7 @@ export function useStudentApi() {
         try {
             return await $fetch(`${apiBaseUrl}/students/${id}`, {method: "DELETE"});
         } catch (err) {
-            console.error("❌ Erro ao excluir aluno:", err);
+            console.error(" Erro ao excluir aluno:", err);
             throw err;
         }
     };

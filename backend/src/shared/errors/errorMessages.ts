@@ -54,6 +54,11 @@ export const ERROR_MESSAGES = {
         internalCode: 'TOKEN_MISSING',
         statusCode: 401,
     },
+    INVALID_ID: {
+        message: 'Id não pode ser menor ou igual a zero',
+        internalCode: 'INVALID_ID',
+        statusCode: 400,
+    },
     INVALID_TOKEN: {
         message: 'Não autorizado. Faça login novamente',
         internalCode: 'INVALID_TOKEN',

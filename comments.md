@@ -10,6 +10,11 @@ Adotei a **Clean Architecture**, separando a lógica de negócio da infraestrutu
 - **Infrastructure**: Responsável pelo acesso ao banco de dados (PostgreSQL via Sequelize).
 - **Middlewares**: Middleware global de erro e middleware de async handler para evitar try/catch redundantes.
 
+## Diagrama Banco de Dados
+- Eu modelei duas tabelas, uma para representar os alunos matriculados e outra para representar os usuarios do sistema.
+
+![img.png](img.png)
+
 ### Frontend:
 Usei **Nuxt 3 + TypeScript + Vuetify**, mantendo componentes modulares e centralizando regras de validação para facilitar reutilização.
 
@@ -42,19 +47,20 @@ Usei **Nuxt 3 + TypeScript + Vuetify**, mantendo componentes modulares e central
 ## 3️⃣ Melhorias Futuras
 
 Se houvesse mais tempo, eu:
-- **Finalizaria a autenticação JWT** com proteção de rotas e roles.
-- Melhoraria a **componentização** e otimização de código.
+
+- Melhoraria a **componentização** e otimização de código do front, criando componente padrao pra botões, inputs, etc.
 - Criaria **sistema de telemetria e auditoria** usando os campos `created_at` e `updated_at` para logs.
 - Criaria **filtros** e opções de ordenação mais robustas na listagem de alunos.
-- Melhoraria a **documentação**, incluindo OpenAPI/Swagger para a API.
+- Melhoraria a **documentação**, incluindo OpenAPI para a API.
 - Adicionaria paginação e filtros na listagem de alunos, para melhorar a performance.
-- se tive-sse mais tempo faria uma logiva de remember me para o login.
-
+- Faria uma logica de "remember me" para o login.
+- aplicado testes de integração no backend.
+- aplicado testes no frontend.
 ---
 
 ## 4️⃣ Requisitos Entregues e Não Entregues
 
-✅ **Funcionalidades obrigatórias entregues**:
+**Funcionalidades obrigatórias entregues**:
 - CRUD completo de alunos
 - Validação de campos
 - Interface responsiva e estilizada
