@@ -5,6 +5,7 @@ import {UserRepository} from "../../Infrastructure/repositories/UserRepository";
 import {UserLoginDTO} from "../DTOs/UserLoginDTO";
 import {UserRegisterDTO} from "../DTOs/UserRegisterDTO";
 import {GetUser} from "../../UseCases/Auth/GetUser";
+import {UserLoginResponseDTO} from "../DTOs/UserLoginResponseDTO";
 
 const userRepository = new UserRepository();
 const authUserUseCase = new AuthenticateUser(userRepository);
@@ -15,8 +16,8 @@ export const AuthenticateController = {
     login: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userRequest: UserLoginDTO = req.body;
-            const {user, token} = await authUserUseCase.execute(userRequest);
-            return res.status(200).json({user, token});
+            const response: UserLoginResponseDTO = await authUserUseCase.execute(userRequest);
+            return res.status(200).json(response);
         } catch (error) {
             next(error);
         }
