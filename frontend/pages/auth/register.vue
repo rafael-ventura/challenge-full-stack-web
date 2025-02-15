@@ -15,7 +15,7 @@
           <v-text-field
               label="Senha"
               v-model="user.password"
-              :rules="[rules.required, rules.password]"
+              :rules="[rules.required]"
               required
               type="password"
           />
@@ -51,7 +51,6 @@ const user = ref({
 const rules = {
   required: (v: string) => !!v || "Este campo é obrigatório.",
   email: (v: string) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || "E-mail inválido.",
-  password: (v: string) => v.length >= 6 || "A senha deve ter pelo menos 6 caracteres.",
   minLength: (v: string) => v.length >= 2 || "O nome deve ter pelo menos 2 caracteres.",
 };
 
